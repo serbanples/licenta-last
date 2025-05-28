@@ -19,6 +19,15 @@
         "tsConfigPath": "apps/auth-server/tsconfig.app.json"
       }
     },
+    "autz-server": {
+      "type": "application",
+      "root": "apps/autz-server",
+      "entryFile": "main",
+      "sourceRoot": "apps/autz-server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/autz-server/tsconfig.app.json"
+      }
+    },
     "clients": {
       "type": "library",
       "root": "libs/clients",
