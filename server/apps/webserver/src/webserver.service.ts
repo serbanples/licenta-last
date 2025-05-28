@@ -1,3 +1,4 @@
+import { Public } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

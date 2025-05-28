@@ -1,3 +1,4 @@
+import { Request } from "express";
 import { UserRoleEnum } from "./db";
 
 export interface UserContextType {

@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ClientsModule as NestClientsModule } from '@nestjs/microservices';
 import { RabbitConfService } from '@app/conf/rabbitconf.service';
 import { AUTH_SERVER_NAME, CORE_SERVER_NAME } from './clients.constants';
 import { AuthProxyService } from './authProxy.service';
 
-
+@Global()
 @Module({
   imports: [
     NestClientsModule.registerAsync([
