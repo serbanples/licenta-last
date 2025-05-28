@@ -1,4 +1,9 @@
 export interface AppConfig {
+    rabbitmq: {
+        uri: string;
+        authQueue: string;
+        coreQueue: string;
+    };
     webserver: {
         port: number;
     }
@@ -18,6 +23,11 @@ export interface AppConfig {
 }
 
 export const defaultConfig: AppConfig = {
+    rabbitmq: {
+        uri: 'amqp://localhost:5672',
+        authQueue: 'auth-queue',
+        coreQueue: 'core-queue',
+    },
     webserver: {
         port: 3000,
     },

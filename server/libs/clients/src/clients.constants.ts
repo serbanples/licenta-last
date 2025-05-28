@@ -1,0 +1,2 @@
+export const AUTH_SERVER_NAME = 'AUTH_SERVER';
+export const CORE_SERVER_NAME = 'CORE_SERVER';

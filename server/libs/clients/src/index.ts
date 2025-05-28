@@ -1,2 +1,4 @@
 export * from './clients.module';
-export * from './clients.service';
+export * from './clients.constants';
+export * from './authProxy.service';
+export * from './messages.constants';

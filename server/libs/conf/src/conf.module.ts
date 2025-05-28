@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfService } from './conf.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './configuration';
+import { RabbitConfService } from './rabbitconf.service';
 
 @Global()
 @Module({
@@ -12,7 +13,7 @@ import configuration from './configuration';
       load: [configuration],
     })
   ],
-  providers: [ConfService],
-  exports: [ConfService],
+  providers: [ConfService, RabbitConfService],
+  exports: [ConfService, RabbitConfService],
 })
 export class ConfModule {}
