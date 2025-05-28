@@ -6,3 +6,5 @@ export const verifyAccountMessage = 'auth.verifyAccount';
 export const requestResetPasswordMessage = 'auth.requestResetPassword';
 export const resetPasswordMessage = 'auth.resetPassword';
 export const deleteAccountMessage = 'auth.deleteAccount';
+
+export const authorizeMessage = 'autz.authorize';

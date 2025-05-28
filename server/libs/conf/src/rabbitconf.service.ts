@@ -27,4 +27,15 @@ export class RabbitConfService {
             },
         }
     }
+
+    getAutzServerConfig(): ClientProvider {
+        return {
+            transport: Transport.RMQ,
+            options: {
+                urls: [this.conf.getOrDefault<string>('rabbitmq.uri')],
+                queue: this.conf.getOrDefault<string>('rabbitmq.autzQueue'),
+                queueOptions: { durable: true },
+            },
+        }
+    }
 }
