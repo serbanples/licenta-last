@@ -91,6 +91,15 @@
         "tsConfigPath": "apps/uploader-server/tsconfig.app.json"
       }
     },
+    "webserver": {
+      "type": "application",
+      "root": "apps/webserver",
+      "entryFile": "main",
+      "sourceRoot": "apps/webserver/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/webserver/tsconfig.app.json"
+      }
+    },
     "ws-server": {
       "type": "application",
       "root": "apps/ws-server",
