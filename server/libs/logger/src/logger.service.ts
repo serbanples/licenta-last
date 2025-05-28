@@ -33,40 +33,41 @@ export class LoggerService extends Logger {
         });
     }
 
-    log(message: string, context?: string) {
+    log(message: string, data?: any, context?: string) {
         const ctx = context ?? this.serviceName;
         super.log(message, ctx);
-        this.index('log', message, ctx);
+        this.index('log', message, ctx, data);
     }
 
-    error(message: string, trace?: string, context?: string) {
+    error(message: string, data?: any, trace?: string, context?: string) {
         const ctx = context ?? this.serviceName;
         super.error(message, trace, ctx);
-        this.index('error', message, ctx, trace);
+        this.index('error', message, ctx, data, trace);
     }
 
-    warn(message: string, context?: string) {
+    warn(message: string, data?: any, context?: string) {
         const ctx = context ?? this.serviceName;
         super.warn(message, ctx);
-        this.index('warn', message, ctx);
+        this.index('warn', message, ctx, data);
     }
 
-    debug(message: string, context?: string) {
+    debug(message: string, data?: any, context?: string) {
         const ctx = context ?? this.serviceName;
         super.debug(message, ctx);
-        this.index('debug', message, ctx);
+        this.index('debug', message, ctx, data);
     }
 
-    verbose(message: string, context?: string) {
+    verbose(message: string, data?: any, context?: string) {
         const ctx = context ?? this.serviceName;
         super.verbose(message, ctx);
-        this.index('verbose', message, ctx);
+        this.index('verbose', message, ctx, data);
     }
 
     private async index(
         level: string,
         message: string,
         context: string,
+        data?: any,
         trace?: string,
     ) {
         try {
@@ -79,6 +80,7 @@ export class LoggerService extends Logger {
                     context,
                     message,
                     trace: trace || null,
+                    ...data
                 },
             });
         } catch (err: any) {
