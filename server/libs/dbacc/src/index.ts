@@ -1,2 +1,3 @@
-export * from './dbacc.module';
-export * from './dbacc.service';
+export * from './database.module';
+export * from './models';
+export * from './schema';
