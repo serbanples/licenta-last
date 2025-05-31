@@ -1,0 +1,107 @@
+version: '3.9'
+
+services:
+  # Mongo db service
+  mongodb: 
+    image: mongo:6.0
+    container_name: licenta_mongodb
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - mongodb_data:/data/db
+
+  # Elastic search service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.2
+    container_name: licenta_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "xpack.security.enabled=false"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  # Kibana Service
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.2
+    container_name: licenta_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false
+      - xpack.fleet.enabled=false
+      - xpack.fleet.agents.enabled=false
+      - xpack.fleet.setup.is_fleet_server=false
+      - xpack.reporting.enabled=false
+      - xpack.security.encryptionKey=something_at_least_32_characters
+      - xpack.reporting.encryptionKey=something_at_least_32_characters
+      - xpack.encryptedSavedObjects.encryptionKey=something_at_least_32_characters
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  rabbitmq: 
+    image: rabbitmq:4.0.5-management
+    container_name: licenta_rabitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:7-alpine
+    container_name: licenta_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  smtp:
+    image: maildev/maildev
+    container_name: licenta_fake_smtp
+    ports: 
+      - "1025:1025"
+      - "1080:1080"
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minio_access_key
+      MINIO_ROOT_PASSWORD: minio_secret_key
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - app-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  es_data:
+    driver: local
+  minio_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
+    

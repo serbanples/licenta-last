@@ -19,11 +19,13 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/server/test/jest-e2e.json",
     "start:webserver": "nest start webserver -- service.name=LicentaWebServer -- webserver.port=4000",
-    "start:auth": "nest start auth-server",
-    "start:autz": "nest start autz-server"
+    "start:auth": "nest start auth-server -- service.name=LicentaAuthServer",
+    "start:autz": "nest start autz-server -- service.name=LicentaAutzServer",
+    "start:mail": "nest start mail-server --service.name=LicentaMailServer"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.0.2",
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",

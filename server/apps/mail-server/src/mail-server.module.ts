@@ -1,10 +1,44 @@
 import { Module } from '@nestjs/common';
-import { MailServerController } from './mail-server.controller';
-import { MailServerService } from './mail-server.service';
+import { BullModule } from '@nestjs/bullmq';
+import { BullConfService, ConfModule, ConfService } from '@app/conf';
+import { LoggerModule } from '@app/logger';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailService } from './mail-server.service';
+import { MailProcessor } from './mail-server.processor';
 
 @Module({
-  imports: [],
-  controllers: [MailServerController],
-  providers: [MailServerService],
+  imports: [
+    ConfModule,
+    LoggerModule,
+    BullModule.forRootAsync({
+      inject: [ConfService],
+      useFactory: (conf: ConfService) => ({
+        connection: {
+          host: conf.getOrDefault<string>('redisMail.host'),
+          port: conf.getOrDefault<number>('redisMail.port'),
+          db: conf.getOrDefault<number>('redisMail.db')
+        }
+      })
+    }),
+    BullModule.registerQueueAsync({
+      inject: [BullConfService],
+      useFactory: (bullConf: BullConfService) => bullConf.getMailQueueConf()
+    }),
+    MailerModule.forRootAsync({
+      inject: [ConfService],
+      useFactory: (conf: ConfService) => ({
+        transport: {
+          host: conf.getOrDefault<string>('smtp.host'),
+          port: conf.getOrDefault<string>('smpt.port'),
+          auth: undefined
+        },
+        defaults: {
+          from: '"No Reply" <noreply@classcloud.com>'
+        }
+      })
+    })
+  ],
+  controllers: [],
+  providers: [MailService, MailProcessor],
 })
 export class MailServerModule {}
