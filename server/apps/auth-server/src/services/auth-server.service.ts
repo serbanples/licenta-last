@@ -5,8 +5,8 @@ import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundEx
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, Observable } from 'rxjs';
-import { CORE_SERVER_NAME } from '@app/clients';
-import { LoginAccountDto, NewAccountDto, RequestResetPasswordDto, ResetPasswordFormDto, SuccessResponse, Token, UserContextType, UserRoleEnum, VerificationTokenDto, WithContext } from '@app/types';
+import { CORE_SERVER_NAME, MailClient } from '@app/clients';
+import { LoginAccountDto, MailTypeEnum, NewAccountDto, RequestResetPasswordDto, ResetPasswordFormDto, SuccessResponse, Token, UserContextType, UserRoleEnum, VerificationTokenDto, WithContext } from '@app/types';
 import { ConfService } from '@app/conf';
 import { AccountModel, AccountType } from '@app/dbacc';
 
@@ -21,8 +21,7 @@ export class AuthServerService {
     private readonly model: AccountModel,
     private readonly jwtService: JwtService,
     private readonly config: ConfService,
-    // @Inject(config.rabbitMQ.mailer.serviceName) mailer: ClientProxy,
-    // private readonly coreService: Coreser
+    private readonly mailClient: MailClient,
   ) {
   }
 
@@ -226,11 +225,11 @@ export class AuthServerService {
   }
 
   private sendVerificationEmail(email: string, verificationToken: string): void {
-    // this.mailClient.emit(config.rabbitMQ.mailer.messages.verifyAccount, { to: email, verificationToken });
+    this.mailClient.send({ to: email, subject: '', mailType: MailTypeEnum.VERIFY_ACCOUNT, payload: { verificationToken }})
   }
 
   private sendResetPasswordEmail(email: string, resetToken: string): void {
-    // this.mailClient.emit(config.rabbitMQ.mailer.messages.resetPassword, { to: email, resetToken });
+    this.mailClient.send({ to: email, subject: '', mailType: MailTypeEnum.RESET_PASSWORD, payload: { resetToken }})
   }
 
   private sendUserCreatedEventToCore(accountData: AccountType): void {

@@ -4,6 +4,7 @@ import { RabbitConfService } from '@app/conf/rabbitconf.service';
 import { AUTH_SERVER_NAME, AUTZ_SERVER_NAME, CORE_SERVER_NAME } from './clients.constants';
 import { AuthProxyService } from './authProxy.service';
 import { AutzProxyService } from './autzProxy.service';
+import { MailClient } from './mailClient.service';
 
 @Global()
 @Module({
@@ -26,7 +27,7 @@ import { AutzProxyService } from './autzProxy.service';
       }
     ]),
   ],
-  providers: [AuthProxyService, AutzProxyService],
-  exports: [AuthProxyService, AutzProxyService],
+  providers: [AuthProxyService, AutzProxyService, MailClient],
+  exports: [AuthProxyService, AutzProxyService, MailClient],
 })
 export class ClientsModule {}
