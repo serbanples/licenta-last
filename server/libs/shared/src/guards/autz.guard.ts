@@ -3,7 +3,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from "@nestjs/core";
 import { catchError, Observable, tap } from "rxjs";
 import { AUTHORIZE_KEY } from "../decorators/autorization.decorator";
-import { AuthorizeDataType } from "@app/types";
+import { AuthorizeDataType, WithContext } from "@app/types";
 
 @Injectable()
 export class AutzGuard implements CanActivate {
@@ -18,7 +18,9 @@ export class AutzGuard implements CanActivate {
             context.getClass(),
         ]);
 
-        return this.autzClient.authorize(message).pipe(
+        const payloadData: WithContext<any> = context.switchToRpc().getData();
+
+        return this.autzClient.authorize({ ...message, userRole: payloadData.userContext.role }).pipe(
             tap((data) => {
                 if(!data) throw new UnauthorizedException('Not authorized for this action');
                 return true;

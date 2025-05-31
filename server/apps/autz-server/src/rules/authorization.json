@@ -1,0 +1,65 @@
+{
+    "user": {
+        "users": {
+            "create": true,
+            "browse": true,
+            "suggest": true,
+            "update": true,
+            "addFriend": true
+        },
+        "friendRequest": {
+            "request": true,
+            "accept": true,
+            "reject": true,
+            "cancel": true,
+            "browse": true
+        },
+        "friend": {
+            "remove": true,
+            "browse": true,
+            "browseCommon": true
+        }
+    },
+    "admin": {
+        "users": {
+            "create": true,
+            "browse": true,
+            "suggest": true,
+            "update": true,
+            "addFriend": true
+        },
+        "friendRequest": {
+            "request": true,
+            "accept": true,
+            "reject": true,
+            "cancel": true,
+            "browse": true
+        },
+        "friend": {
+            "remove": true,
+            "browse": true,
+            "browseCommon": true
+        }
+    },
+    "master": {
+        "users": {
+            "create": true,
+            "browse": true,
+            "suggest": true,
+            "update": true,
+            "addFriend": true
+        },
+        "friendRequest": {
+            "request": true,
+            "accept": true,
+            "reject": true,
+            "cancel": true,
+            "browse": true
+        },
+        "friend": {
+            "remove": true,
+            "browse": true,
+            "browseCommon": true
+        }
+    }
+}
