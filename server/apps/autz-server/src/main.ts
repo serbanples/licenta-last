@@ -22,10 +22,10 @@ async function bootstrap(): Promise<void> {
 
   await app.listen();
 
-  logger.log('Authentication Microservice Started', {
+  logger.log('Authorization Microservice Started', {
     event: 'microservice_start',
     transport: 'RabbitMQ',
-    queue: 'auth-queue',
+    queue: 'autz-queue',
     url: 'amqp://localhost:5672',
     environment: process.env['NODE_ENV'] ?? 'development',
     timestamp: new Date().toISOString(),
@@ -33,7 +33,7 @@ async function bootstrap(): Promise<void> {
   });
 }
 bootstrap().catch((error) => {
-  console.error('Failed to start Authentication Microservice', {
+  console.error('Failed to start Authorization Microservice', {
     event: 'microservice_start_failed',
     error: (error as Error).message,
     timestamp: new Date().toISOString(),

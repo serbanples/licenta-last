@@ -21,7 +21,7 @@
     "start:webserver": "nest start webserver -- service.name=LicentaWebServer -- webserver.port=4000",
     "start:auth": "nest start auth-server -- service.name=LicentaAuthServer",
     "start:autz": "nest start autz-server -- service.name=LicentaAutzServer",
-    "start:mail": "nest start mail-server --service.name=LicentaMailServer"
+    "start:mail": "nest start mail-server -- service.name=LicentaMailServer"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.0.2",
