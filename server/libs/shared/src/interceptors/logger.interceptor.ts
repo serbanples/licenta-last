@@ -3,7 +3,7 @@ import { Observable, tap } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { LoggerService } from '@app/logger';
 import { LOG_METADATA } from './logger.metadata';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

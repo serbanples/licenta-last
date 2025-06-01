@@ -20,23 +20,25 @@ export interface AppConfig {
     service: {
         name: string;
     },
-    redisMail: {
+    redis: {
         host: string,
         port: number,
-        db: number,
+        mailDb: number,
+        uploaderDb: number,
     },
     smtp: {
         host: string,
         port: number,
     },
     minio: {
-        MINIO_ENDPOINT: string,
-        MINIO_PORT: number,
-        MINIO_USE_SSL: boolean,
-        MINIO_ACCESS_KEY: string,
-        MINIO_SECRET_KEY: string,
-        MINIO_BUCKET_NAME: string,
-        MINIO_REGION: string,
+        endpoint: string,
+        port: number,
+        useSsl: boolean,
+        accesskey: string,
+        secretkey: string,
+    },
+    token: {
+        expiration: number
     }
 
 }
@@ -63,22 +65,24 @@ export const defaultConfig: AppConfig = {
     service: {
         name: 'default-service',
     },
-    redisMail: {
+    redis: {
         host: 'localhost',
         port: 6379,
-        db: 1
+        mailDb: 1,
+        uploaderDb: 2,
     },
     smtp: {
         host: 'localhost',
         port: 1025
     },
     minio: {
-        MINIO_ENDPOINT: 'localhost',
-        MINIO_PORT: 9000,
-        MINIO_USE_SSL: false,
-        MINIO_ACCESS_KEY: 'minio_access_key',
-        MINIO_SECRET_KEY: 'minio_secret_key',
-        MINIO_BUCKET_NAME: 'files',
-        MINIO_REGION: 'us-east-1',
+        endpoint: 'localhost',
+        port: 9000,
+        useSsl: false,
+        accesskey: 'minio_access_key',
+        secretkey: 'minio_secret_key',
     },
+    token: {
+        expiration: 5 * 60,
+    }
 };

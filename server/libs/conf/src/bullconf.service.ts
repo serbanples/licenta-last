@@ -11,9 +11,19 @@ export class BullConfService {
     getMailQueueConf() {
         return {
             connection: {
-                host: this.conf.getOrDefault<string>('redisMail.host'),
-                port: this.conf.getOrDefault<number>('redisMail.port'),
-                db: this.conf.getOrDefault<number>('redisMail.db'),
+                host: this.conf.getOrDefault<string>('redis.host'),
+                port: this.conf.getOrDefault<number>('redis.port'),
+                db: this.conf.getOrDefault<number>('redis.mailDb'),
+            },
+        }
+    }
+
+    getUplaoderQueueConf() {
+        return {
+            connection: {
+                host: this.conf.getOrDefault<string>('redis.host'),
+                port: this.conf.getOrDefault<number>('redis.port'),
+                db: this.conf.getOrDefault<number>('redis.uploaderDb'),
             },
         }
     }

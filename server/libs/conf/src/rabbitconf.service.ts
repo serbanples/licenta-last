@@ -12,7 +12,7 @@ export class RabbitConfService {
             options: {
                 urls: [this.conf.getOrDefault<string>('rabbitmq.uri')],
                 queue: this.conf.getOrDefault<string>('rabbitmq.authQueue'),
-                queueOptions: { durable: true },
+                queueOptions: { durable: false },
             },
         }
     }
@@ -23,7 +23,7 @@ export class RabbitConfService {
             options: {
                 urls: [this.conf.getOrDefault<string>('rabbitmq.uri')],
                 queue: this.conf.getOrDefault<string>('rabbitmq.coreQueue'),
-                queueOptions: { durable: true },
+                queueOptions: { durable: false },
             },
         }
     }
@@ -34,7 +34,7 @@ export class RabbitConfService {
             options: {
                 urls: [this.conf.getOrDefault<string>('rabbitmq.uri')],
                 queue: this.conf.getOrDefault<string>('rabbitmq.autzQueue'),
-                queueOptions: { durable: true },
+                queueOptions: { durable: false },
             },
         }
     }

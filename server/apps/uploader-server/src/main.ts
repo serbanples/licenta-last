@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { LoggerService } from '@app/logger';
-import { UploaderServerModule } from './uploader-server.module';
+import { UplaoderServerModule } from './uploader-server.module';
 
 async function bootstrap() {
-  const appContext = await NestFactory.createApplicationContext(UploaderServerModule);
+  const appContext = await NestFactory.createApplicationContext(UplaoderServerModule);
 
   const logger = appContext.get(LoggerService);
   logger.log('Uploader Microservice Started', {

@@ -29,7 +29,7 @@ import { MailProcessor } from './mail-server.processor';
       useFactory: (conf: ConfService) => ({
         transport: {
           host: conf.getOrDefault<string>('smtp.host'),
-          port: conf.getOrDefault<string>('smpt.port'),
+          port: conf.getOrDefault<number>('smtp.port'),
           auth: undefined
         },
         defaults: {

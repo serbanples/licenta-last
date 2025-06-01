@@ -1,12 +1,15 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule as NestClientsModule } from '@nestjs/microservices';
-import { AUTH_SERVER_NAME, AUTZ_SERVER_NAME, CORE_SERVER_NAME, MAIL_SERVER_QUEUE } from './clients.constants';
+import { AUTH_SERVER_NAME, AUTZ_SERVER_NAME, CORE_SERVER_NAME, MAIL_SERVER_QUEUE, UPLOADER_SERVER_QUEUE } from './clients.constants';
 import { AuthProxyService } from './authProxy.service';
 import { AutzProxyService } from './autzProxy.service';
 import { MailClient } from './mailClient.service';
 import { BullModule } from '@nestjs/bullmq';
 import { BullConfService } from '@app/conf';
 import { RabbitConfService } from '@app/conf/rabbitconf.service';
+import { RegisterQueueAsyncOptions } from '@nestjs/bullmq';
+import { CoreProxyService } from './coreProxy.service';
+import { UploaderClient } from './uploaderClient.service';
 
 @Global()
 @Module({
@@ -28,15 +31,24 @@ import { RabbitConfService } from '@app/conf/rabbitconf.service';
         inject: [RabbitConfService],
       }
     ]),
-    BullModule.forRootAsync({
-      inject: [BullConfService],
-      useFactory: (bullConf: BullConfService) => bullConf.getMailQueueConf(),
-    }),
-    BullModule.registerQueue({
-      name: MAIL_SERVER_QUEUE,
-    }),
+    // BullModule.forRootAsync({
+    //   inject: [BullConfService],
+    //   useFactory: (bullConf: BullConfService) => bullConf.getMailQueueConf(),
+    // }),
+    BullModule.registerQueueAsync(
+      {
+        name: MAIL_SERVER_QUEUE,
+        inject: [BullConfService],
+        useFactory: (bullConf: BullConfService) => bullConf.getMailQueueConf(),
+      },
+      {
+        name: UPLOADER_SERVER_QUEUE,
+        inject: [BullConfService],
+        useFactory: (bullConf: BullConfService) => bullConf.getUplaoderQueueConf(),
+      },
+    ),
   ],
-  providers: [AuthProxyService, AutzProxyService, MailClient],
-  exports: [AuthProxyService, AutzProxyService, MailClient],
+  providers: [AuthProxyService, AutzProxyService, MailClient, CoreProxyService, UploaderClient],
+  exports: [AuthProxyService, AutzProxyService, MailClient, CoreProxyService, UploaderClient],
 })
 export class ClientsModule { }

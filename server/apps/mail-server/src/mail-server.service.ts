@@ -30,13 +30,15 @@ export class MailService {
    * @returns {Promise<void>} sends an email.
    */
   private async sendVerificationEmail(to: string, verificationToken: string): Promise<void> {
-    const verificationUrl = `http://localhost:3000/auth/verify-account?verificationToken=${verificationToken}`;
+    const verificationUrl = `http://localhost:4000/auth/verify-account?verificationToken=${verificationToken}`;
     const html = '<h1>Welcome to Our Platform!</h1><p>To verify your account, click on the link below:</p><a href="{{verificationUrl}}">Verify Account</a>';
 
     const template = handlebars.compile(html);
     const replacements = {
       verificationUrl,
     }
+
+    console.log('before send')
 
     await this.mailer.sendMail({
       from: '"Auth" <auth@classcloud.com>',
@@ -56,13 +58,15 @@ export class MailService {
    * @returns {Promise<void>} sends an email.
    */
   private async sendResetPasswordEmail(to: string, resetToken: string): Promise<void> {
-    const resetPasswordUrl = `http://localhost:3000/auth/reset-password?resetToken=${resetToken}`;
+    const resetPasswordUrl = `http://localhost:4000/auth/reset-password?resetToken=${resetToken}`;
     const html = '<p>To reset your password, click on the link below:</p><a href="{{resetPasswordUrl}}">Reset Password</a>';
 
     const template = handlebars.compile(html);
     const replacements = {
       resetPasswordUrl,
     }
+
+    console.log('before send')
 
     await this.mailer.sendMail({
       from: '"Auth" <auth@classcloud.com>',
