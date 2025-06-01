@@ -8,9 +8,13 @@ import { MAIL_SERVER_QUEUE } from "@app/clients";
 export class BullConfService {
     constructor(private readonly conf: ConfService) { }
 
-    getMailQueueConf(): RegisterQueueOptions {
+    getMailQueueConf() {
         return {
-            name: MAIL_SERVER_QUEUE,
+            connection: {
+                host: this.conf.getOrDefault<string>('redisMail.host'),
+                port: this.conf.getOrDefault<number>('redisMail.port'),
+                db: this.conf.getOrDefault<number>('redisMail.db'),
+            },
         }
     }
 }

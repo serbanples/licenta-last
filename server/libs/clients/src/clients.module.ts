@@ -1,10 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { ClientsModule as NestClientsModule } from '@nestjs/microservices';
-import { RabbitConfService } from '@app/conf/rabbitconf.service';
-import { AUTH_SERVER_NAME, AUTZ_SERVER_NAME, CORE_SERVER_NAME } from './clients.constants';
+import { AUTH_SERVER_NAME, AUTZ_SERVER_NAME, CORE_SERVER_NAME, MAIL_SERVER_QUEUE } from './clients.constants';
 import { AuthProxyService } from './authProxy.service';
 import { AutzProxyService } from './autzProxy.service';
 import { MailClient } from './mailClient.service';
+import { BullModule } from '@nestjs/bullmq';
+import { BullConfService } from '@app/conf';
+import { RabbitConfService } from '@app/conf/rabbitconf.service';
 
 @Global()
 @Module({
@@ -26,8 +28,15 @@ import { MailClient } from './mailClient.service';
         inject: [RabbitConfService],
       }
     ]),
+    BullModule.forRootAsync({
+      inject: [BullConfService],
+      useFactory: (bullConf: BullConfService) => bullConf.getMailQueueConf(),
+    }),
+    BullModule.registerQueue({
+      name: MAIL_SERVER_QUEUE,
+    }),
   ],
   providers: [AuthProxyService, AutzProxyService, MailClient],
   exports: [AuthProxyService, AutzProxyService, MailClient],
 })
-export class ClientsModule {}
+export class ClientsModule { }
