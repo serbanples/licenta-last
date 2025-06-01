@@ -8,3 +8,4 @@ export const resetPasswordMessage = 'auth.resetPassword';
 export const deleteAccountMessage = 'auth.deleteAccount';
 
 export const authorizeMessage = 'autz.authorize';
+export const notificationMessage = 'notification.send';

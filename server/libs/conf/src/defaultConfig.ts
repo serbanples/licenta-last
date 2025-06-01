@@ -4,6 +4,7 @@ export interface AppConfig {
         authQueue: string;
         coreQueue: string;
         autzQueue: string;
+        notificationQueue: string;
     };
     webserver: {
         port: number;
@@ -48,7 +49,8 @@ export const defaultConfig: AppConfig = {
         uri: 'amqp://localhost:5672',
         authQueue: 'auth-queue',
         coreQueue: 'core-queue',
-        autzQueue: 'autz-queue'
+        autzQueue: 'autz-queue',
+        notificationQueue: 'notification-queue',
     },
     webserver: {
         port: 3000,

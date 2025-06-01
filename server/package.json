@@ -22,7 +22,8 @@
     "start:auth": "nest start auth-server -- service.name=LicentaAuthServer",
     "start:autz": "nest start autz-server -- service.name=LicentaAutzServer",
     "start:mail": "nest start mail-server -- service.name=LicentaMailServer",
-    "start:uploader": "nest start uploader-server -- service.name=LicentaUploaderServer"
+    "start:uploader": "nest start uploader-server -- service.name=LicentaUploaderServer",
+    "start:notification": "nest start notification-server -- service.name=LicentaNotificationServer"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^9.0.2",
