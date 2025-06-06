@@ -46,13 +46,13 @@
         "tsConfigPath": "libs/conf/tsconfig.lib.json"
       }
     },
-    "core": {
+    "core-server": {
       "type": "application",
-      "root": "apps/core",
+      "root": "apps/core-server",
       "entryFile": "main",
-      "sourceRoot": "apps/core/src",
+      "sourceRoot": "apps/core-server/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/core/tsconfig.app.json"
+        "tsConfigPath": "apps/core-server/tsconfig.app.json"
       }
     },
     "dbacc": {

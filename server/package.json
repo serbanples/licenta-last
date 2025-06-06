@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./apps/server/test/jest-e2e.json",
     "start:webserver": "nest start webserver -- service.name=LicentaWebServer -- webserver.port=4000",
     "start:auth": "nest start auth-server -- service.name=LicentaAuthServer",
+    "start:core": "nest start core-server --service.name=LicentaCoreServer",
     "start:autz": "nest start autz-server -- service.name=LicentaAutzServer",
     "start:mail": "nest start mail-server -- service.name=LicentaMailServer",
     "start:uploader": "nest start uploader-server -- service.name=LicentaUploaderServer",
