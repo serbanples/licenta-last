@@ -14,9 +14,9 @@ import { MailProcessor } from './mail-server.processor';
       inject: [ConfService],
       useFactory: (conf: ConfService) => ({
         connection: {
-          host: conf.getOrDefault<string>('redisMail.host'),
-          port: conf.getOrDefault<number>('redisMail.port'),
-          db: conf.getOrDefault<number>('redisMail.db')
+          host: conf.getOrDefault<string>('redis.host'),
+          port: conf.getOrDefault<number>('redis.port'),
+          db: conf.getOrDefault<number>('redis.mailDb')
         }
       })
     }),

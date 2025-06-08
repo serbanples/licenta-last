@@ -15,6 +15,7 @@ export enum ModelNameEnum {
     MESSAGE = 'MessageType',
     CONVERSATION = 'ConversationType',
     FRIEND_REQUEST = 'FriendRequestType',
+    NOTIFICATION = 'NotificationType'
 }
 
 export interface QueryPaginationFilter {

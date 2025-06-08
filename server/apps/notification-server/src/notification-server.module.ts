@@ -4,9 +4,10 @@ import { NotificationServerService } from './notification-server.service';
 import { ConfModule } from '@app/conf';
 import { LoggerModule } from '@app/logger';
 import { ClientsModule } from '@app/clients';
+import { DatabaseModule } from '@app/dbacc';
 
 @Module({
-  imports: [ConfModule, LoggerModule, ClientsModule],
+  imports: [ConfModule, LoggerModule, ClientsModule, DatabaseModule],
   controllers: [NotificationServerController],
   providers: [NotificationServerService],
 })

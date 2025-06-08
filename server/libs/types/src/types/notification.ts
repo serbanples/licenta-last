@@ -6,5 +6,5 @@ export interface NotificationData {
 
 export enum NotificationTopicEnum {
     UPLOAD = 'upload',
-    FRIEND_REQUEST = 'friend-request',
+    NOTIFICATION = 'notification',
 }

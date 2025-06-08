@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { BaseSchema } from "./base.schema";
-import _ from "lodash";
+import * as _ from "lodash";
 import { ModelNameEnum } from "@app/types";
 import mongoose from "mongoose";
 

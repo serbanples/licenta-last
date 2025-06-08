@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { BaseSchema } from "./base.schema";
 import * as _ from "lodash";
-import { FriendRequestStatusEnum, ModelNameEnum } from "@app/types";
+import { FriendRequestStatusEnum, ModelNameEnum, NotificationTopicEnum } from "@app/types";
 import mongoose from "mongoose";
 
 @Schema({
   timestamps: true,
-  collection: 'friendRequests',
+  collection: 'notifications',
   toJSON: {
     virtuals: true,
     transform: (__, ret) => {
@@ -28,15 +28,18 @@ import mongoose from "mongoose";
     }
   }
 })
-export class FriendRequestType extends BaseSchema {
+export class NotificationType extends BaseSchema {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: ModelNameEnum.USER, required: true })
-  senderId!: string;
+  sendTo!: string[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: ModelNameEnum.USER, required: true })
-  receiverId!: string;
+  @Prop({ type: String, enum: NotificationTopicEnum })
+  topic!: FriendRequestStatusEnum;
 
-  @Prop({ type: String, enum: FriendRequestStatusEnum, default: FriendRequestStatusEnum.PENDING })
-  status!: FriendRequestStatusEnum;
+  @Prop({ type: Object })
+  data!: any;
+
+  @Prop({ type: Boolean, default: false })
+  isSeen!: boolean;
 }
 
-export const FriendRequestSchema = SchemaFactory.createForClass(FriendRequestType);
+export const NotificationScheam = SchemaFactory.createForClass(NotificationType);

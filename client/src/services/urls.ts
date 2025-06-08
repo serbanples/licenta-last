@@ -1,4 +1,4 @@
-export const DATASOURCE_URL = 'http://localhost:3000/api';
+export const DATASOURCE_URL = 'http://localhost:4000/api';
 export const LOGIN_URL = '/auth/login';
 export const SIGNUP_URL = '/auth/register';
 export const WHOAMI_URL = '/auth/whoami';
@@ -14,3 +14,6 @@ export const USER_REQUEST_CANCEL_FRIEND_URL = '/users/cancel-friend-request';
 export const USER_REMOVE_FRIEND_URL = '/users/remove-friend'
 export const USER_FRIENDS_COMMON_URL = '/users/browse-common-friends';
 export const USER_FRIENDS_MINE_URL = '/users/browse-friends';
+
+export const NOTIFICATIONS_BROWSE = '/notifications/browse';
+export const NOTIFICATIONS_UPDATE_SEEN = '/notifications/updateSeen';

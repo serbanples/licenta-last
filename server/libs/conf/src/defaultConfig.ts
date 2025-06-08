@@ -8,6 +8,9 @@ export interface AppConfig {
     };
     webserver: {
         port: number;
+    };
+    notification: {
+        port: number;
     }
     mongodb: {
         uri: string;
@@ -55,8 +58,11 @@ export const defaultConfig: AppConfig = {
     webserver: {
         port: 3000,
     },
+    notification: {
+        port: 5610,
+    },
     mongodb: {
-        uri: 'mongodb://localhost:27017/mydb',
+        uri: 'mongodb://localhost:27017/licenta',
     },
     port: 3000,
     elasticsearch: {
@@ -85,6 +91,6 @@ export const defaultConfig: AppConfig = {
         secretkey: 'minio_secret_key',
     },
     token: {
-        expiration: 5 * 60,
+        expiration: 5 * 60 * 1000,
     }
 };

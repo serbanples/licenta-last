@@ -1,11 +1,11 @@
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { Bell, Home, MessageSquare, FolderIcon, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Home, MessageSquare, FolderIcon, Users } from "lucide-react"
 import { useSearch } from "@/hooks/useSearch"
 import { SearchBar } from "./searchbar"
 import { AccountDropdown } from "../custom/account-dropdown"
 import { Tabs, TabsList, TabsTrigger } from "./animated-tabs"
+import { NotificationDropdown } from "../custom/notification"
 
 const routes = [
   { path: "/", label: "Home", icon: Home },
@@ -58,9 +58,10 @@ export function Topbar() {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
+          {/* <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
-          </Button>
+          </Button> */}
+          <NotificationDropdown />
           <AccountDropdown />
         </div>
       </div>

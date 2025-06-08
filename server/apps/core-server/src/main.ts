@@ -2,6 +2,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { NestFactory } from '@nestjs/core';
 import { LoggerService } from '@app/logger';
 import { CoreServerModule } from './core-server.module';
+import { AutzGuard } from '@app/shared/guards/autz.guard';
 
 /* eslint-disable no-console */
 
@@ -19,6 +20,8 @@ async function bootstrap(): Promise<void> {
   });
 
   const logger = app.get(LoggerService);
+
+  app.useGlobalGuards(app.get(AutzGuard));
 
   await app.listen();
 

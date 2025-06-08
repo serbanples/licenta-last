@@ -3,7 +3,7 @@ import { clearCookie, Public, setCookie, UserContext } from "@app/shared";
 import { LoginAccountDto, NewAccountDto, RequestResetPasswordDto, ResetPasswordFormDto, SuccessResponse, UserContextType, VerificationTokenDto } from "@app/types";
 import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, Res } from "@nestjs/common";
 import { Response } from "express";
-import _ from "lodash";
+import * as _ from "lodash";
 import { map, Observable } from "rxjs";
 
 @Controller('auth')

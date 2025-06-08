@@ -8,7 +8,9 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { CORE_SERVER_NAME, MailClient } from '@app/clients';
 import { LoginAccountDto, MailTypeEnum, NewAccountDto, RequestResetPasswordDto, ResetPasswordFormDto, SuccessResponse, Token, UserContextType, UserRoleEnum, VerificationTokenDto, WithContext } from '@app/types';
 import { ConfService } from '@app/conf';
-import { AccountModel, AccountType } from '@app/dbacc';
+import { AccountModel, AccountType, UserType } from '@app/dbacc';
+import { CoreProxyService } from '@app/clients/coreProxy.service';
+import { UserCreateType, UserDeleteType } from '@app/types/types/user';
 
 /**
  * Auth service class.
@@ -22,6 +24,7 @@ export class AuthServerService {
     private readonly jwtService: JwtService,
     private readonly config: ConfService,
     private readonly mailClient: MailClient,
+    private readonly coreProxy: CoreProxyService
   ) {
   }
 
@@ -44,12 +47,13 @@ export class AuthServerService {
           verificationTokenExipration: Date.now() + this.config.getOrDefault<number>('token.expiration'),
         }
 
+        console.log(user.verificationTokenExipration)
+        console.log(Date.now)
+
         return this.model.create(user);
       })
-      .then(async (account) => {
+      .then((account) => {
         this.sendVerificationEmail(newAccount.email, account.accountVerificationToken);
-        // const user = await firstValueFrom(this.sendUserCreatedEventToCore(account));
-        // this.model.updateOne({ _id: account.id }, { userId: user.id });
 
         return { success: true }
       })
@@ -90,6 +94,7 @@ export class AuthServerService {
    * @returns {Promise<SuccessResponse>} true if success, error if not.
    */
   async verifyAccount(token: VerificationTokenDto): Promise<SuccessResponse> {
+    console.log(token)
     return this.model.findOne({ accountVerificationToken: token.verificationToken })
       .then((account) => {
         if (_.isNil(account)) {
@@ -100,10 +105,13 @@ export class AuthServerService {
         }
         return this.model.updateOne({ accountVerificationToken: token.verificationToken }, { isVerified: true })
       })
-      .then((account) => {
+      .then(async (account) => {
         if (_.isNil(account)) {
           throw new NotFoundException('Invalid verification token!')
         }
+
+        const user = await this.sendUserCreatedEventToCore(account);
+        this.model.updateOne({ _id: account.id }, { userId: user.id });
 
         return { success: true };
       })
@@ -179,7 +187,7 @@ export class AuthServerService {
         return this.model.deleteOne({ _id: id })
           .then((result) => {
             if (result.acknowledged) {
-              this.sendUserDeletedEventToCore(account.email);
+              this.sendUserDeletedEventToCore(account.id);
               return { success: true };
             }
 
@@ -232,34 +240,34 @@ export class AuthServerService {
     this.mailClient.send({ to: email, subject: '', mailType: MailTypeEnum.RESET_PASSWORD, payload: { resetToken }})
   }
 
-  private sendUserCreatedEventToCore(accountData: AccountType): void {
-    // const payload: WithContext<UserCreateType> = {
-    //   userContext: {
-    //     id: 'master',
-    //     email: 'master',
-    //     role: UserRoleEnum.MASTER
-    //   },
-    //   data: {
-    //     email: accountData.email,
-    //     fullName: accountData.fullName,
-    //     accountId: accountData.id,
-    //   }
-    // }
+  private sendUserCreatedEventToCore(accountData: AccountType): Promise<UserType> {
+    const payload: WithContext<UserCreateType> = {
+      userContext: {
+        id: 'master',
+        email: 'master',
+        role: UserRoleEnum.MASTER
+      },
+      data: {
+        email: accountData.email,
+        fullName: accountData.fullName,
+        accountId: accountData.id,
+      }
+    }
 
-    // return this.core.send(config.rabbitMQ.core.messages.usersCreate, payload);
+    return firstValueFrom(this.coreProxy.createUser(payload));
   }
 
   private sendUserDeletedEventToCore(accountEmail: string): void {
-    // const payload: WithContext<UserDeleteType> = {
-    //   userContext: {
-    //     id: 'master',
-    //     email: 'master',
-    //     role: UserRoleEnum.MASTER
-    //   },
-    //   data: {
-    //     email: accountEmail,
-    //   }
-    // }
-    // this.core.emit(config.rabbitMQ.core.messages.usersDelete, payload);
+    const payload: WithContext<UserDeleteType> = {
+      userContext: {
+        id: 'master',
+        email: 'master',
+        role: UserRoleEnum.MASTER
+      },
+      data: {
+        id: accountEmail,
+      }
+    }
+    this.coreProxy.deleteUser(payload);
   }
 }

@@ -3,7 +3,7 @@ import { Response } from "express"
 export const setCookie = (response: Response, token: string): void => {
     response.cookie('accessToken', token, {
         httpOnly: true,
-        secure: true,
+        secure: false,
         maxAge: 1000 * 60 * 60 * 24,
     })
 }

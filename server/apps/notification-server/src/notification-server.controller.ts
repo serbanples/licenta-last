@@ -18,8 +18,8 @@ export class NotificationServerController {
    */
   @Sse("events")
   @UseGuards(AuthGuard)
-  stream(@Req() req): Observable<MessageEvent> {
-    const userId = req.user.id;
+  stream(@Req() req): Observable<{ data: NotificationData}> {
+    const userId = req.id;
     return this.notificationService.registerClient(userId);
   }
 
@@ -29,9 +29,9 @@ export class NotificationServerController {
    */
   @MessagePattern(notificationMessage)
   handleNotification(@Payload() payload: NotificationData) {
-    const { sendTo, data } = payload;
+    const { sendTo } = payload;
     for (const userId of sendTo) {
-      this.notificationService.sendToUser(userId, data);
+      this.notificationService.sendToUser(userId, payload);
     }
   }
 }

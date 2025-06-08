@@ -2,6 +2,7 @@
     "user": {
         "users": {
             "create": true,
+            "findById": true,
             "browse": true,
             "suggest": true,
             "update": true,
@@ -18,11 +19,16 @@
             "remove": true,
             "browse": true,
             "browseCommon": true
+        },
+        "notification": {
+            "browse": true,
+            "updateSeen": true
         }
     },
     "admin": {
         "users": {
             "create": true,
+            "findById": true,
             "browse": true,
             "suggest": true,
             "update": true,
@@ -39,11 +45,16 @@
             "remove": true,
             "browse": true,
             "browseCommon": true
+        },
+        "notification": {
+            "browse": true,
+            "updateSeen": true
         }
     },
     "master": {
         "users": {
             "create": true,
+            "findById": true,
             "browse": true,
             "suggest": true,
             "update": true,
@@ -60,6 +71,10 @@
             "remove": true,
             "browse": true,
             "browseCommon": true
+        },
+        "notification": {
+            "browse": true,
+            "updateSeen": true
         }
     }
 }

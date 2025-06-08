@@ -34,6 +34,8 @@ export class AuthGuard implements CanActivate {
 
     const request: RequestWrapper = context.switchToHttp().getRequest();
     const token = this.extractToken(request);
+    console.log(request.headers)
+    console.log(request.cookies)
 
     if (_.isNil(token)) {
       throw new UnauthorizedException('No token provided');
@@ -56,8 +58,8 @@ export class AuthGuard implements CanActivate {
    * @param {RequestWrapper} request request object.
    * @returns {string} token.
    */
-  private extractToken(request: RequestWrapper): string {
-    const accessToken = request.cookies?.accessToken;
+  private extractToken(request: RequestWrapper): string | undefined {
+    const accessToken = request.headers.cookie?.split('=')[1];
 
     return accessToken;
   }

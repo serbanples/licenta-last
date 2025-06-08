@@ -1,5 +1,5 @@
 import { PaginationFilter, QueryPaginationFilter } from '@app/types';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 // @ts-ignore
 

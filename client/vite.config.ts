@@ -11,4 +11,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      "/sse": {
+        target: 'http://localhost:5610',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 })
