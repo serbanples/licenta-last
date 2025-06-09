@@ -8,6 +8,9 @@ import { UserService } from './modules/user.service';
 import { GuardModule } from '@app/shared';
 import { NotificationController } from './controllers/notif.contoller';
 import { NotificationService } from './modules/notification.service';
+import { ChatController } from './controllers/chat.controller';
+import { ConverastionService } from './modules/conversation.service';
+import { MessageService } from './modules/message.service';
 
 @Module({
   imports: [
@@ -17,7 +20,7 @@ import { NotificationService } from './modules/notification.service';
     DatabaseModule,
     GuardModule
   ],
-  controllers: [UserController, NotificationController],
-  providers: [UserService, NotificationService]
+  controllers: [UserController, NotificationController, ChatController],
+  providers: [UserService, NotificationService, ConverastionService, MessageService]
 })
 export class CoreServerModule {}

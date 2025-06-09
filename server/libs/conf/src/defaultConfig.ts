@@ -43,7 +43,10 @@ export interface AppConfig {
     },
     token: {
         expiration: number
-    }
+    },
+    ws: {
+        port: number
+    },
 
 }
 
@@ -92,5 +95,8 @@ export const defaultConfig: AppConfig = {
     },
     token: {
         expiration: 5 * 60 * 1000,
+    },
+    ws: {
+        port: 3001
     }
 };

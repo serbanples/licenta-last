@@ -8,6 +8,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { WebserverUserController } from './controllers/webserver-user.controller';
 import { WebserverNotifController } from './controllers/webserver-notif.controler';
+import { WebserverChatController } from './controllers/webserver-chat.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { WebserverNotifController } from './controllers/webserver-notif.controle
       exclude: ['/api*'],
     }),
   ],
-  controllers: [WebserverAuthController, WebserverUserController, WebserverNotifController],
+  controllers: [WebserverAuthController, WebserverUserController, WebserverNotifController, WebserverChatController],
 })
 export class WebserverModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

@@ -22,6 +22,6 @@ createRoot(document.getElementById('root')!).render(
           </ToastProvider>
         </AuthProvider>
       </LoadingProvider>
-    </StrictMode>,
+    </StrictMode>
   </QueryClientProvider>
 )

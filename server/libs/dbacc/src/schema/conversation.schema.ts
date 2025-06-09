@@ -34,11 +34,8 @@ import { ModelNameEnum } from "@app/types";
   }
 })
 export class ConversationType extends BaseSchema {
-  @Prop({ type: mongoose.Types.ObjectId, ref: ModelNameEnum.USER, required: true })
-  participants!: mongoose.Types.ObjectId[];
-
-  @Prop({ type: mongoose.Types.ObjectId, ref: ModelNameEnum.MESSAGE, required: true })
-  messages!: mongoose.Types.ObjectId[];
+  @Prop({ type: [mongoose.Types.ObjectId], ref: ModelNameEnum.USER, required: true })
+  participants!: string[];
 
   @Prop({ type: String })
   title!: string;

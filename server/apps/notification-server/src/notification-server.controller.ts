@@ -3,12 +3,12 @@ import { Controller, UseGuards, Req } from "@nestjs/common";
 import { Sse, MessageEvent } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { NotificationServerService } from "./notification-server.service";
-import { AuthGuard } from "@app/shared";
+import { AuthGuard, UserContext } from "@app/shared";
 import { MessagePattern, Payload } from "@nestjs/microservices";
-import { NotificationData } from "@app/types";
+import { NotificationData, UserContextType } from "@app/types";
 import { notificationMessage } from "@app/clients";
 
-@Controller("sse")
+@Controller()
 export class NotificationServerController {
   constructor(private readonly notificationService: NotificationServerService) {}
 
@@ -16,10 +16,10 @@ export class NotificationServerController {
    * GET /sse/stream
    * Establishes an SSE connection. JwtAuthGuard populates req.user.
    */
-  @Sse("events")
+  @Sse("sse/events")
   @UseGuards(AuthGuard)
-  stream(@Req() req): Observable<{ data: NotificationData}> {
-    const userId = req.id;
+  stream(@Req() req, @UserContext() user: UserContextType): Observable<{ data: NotificationData}> {
+    const userId = user.id;
     return this.notificationService.registerClient(userId);
   }
 
@@ -29,8 +29,10 @@ export class NotificationServerController {
    */
   @MessagePattern(notificationMessage)
   handleNotification(@Payload() payload: NotificationData) {
+    console.log(payload)
     const { sendTo } = payload;
     for (const userId of sendTo) {
+      console.log(userId)
       this.notificationService.sendToUser(userId, payload);
     }
   }

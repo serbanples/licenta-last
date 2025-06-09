@@ -7,7 +7,7 @@ import { LoginPage } from "@/pages/LoginPage";
 import { AuthLayout } from "@/layouts/AuthLayout";
 import { SignupPage } from "@/pages/SignupPage";
 import { HomePage } from "@/pages/HomePage";
-import { ChatPage } from "@/pages/ChatPage";
+import { ChatPage } from "@/pages/chat-page/ChatPage";
 import { FilesPage } from "@/pages/FilesPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { VerifyAccountPage } from "@/pages/VerifyAccountPage";

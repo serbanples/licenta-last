@@ -3,6 +3,7 @@ import { ConfService } from '@app/conf';
 import { LoggerService } from '@app/logger';
 import { AuthGuard } from '@app/shared';
 import { NotificationServerModule } from './notification-server.module';
+import { RmqOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(NotificationServerModule, { cors: {
@@ -19,6 +20,18 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type'],   // adjust as needed
     exposedHeaders: ['Content-Type'],   // headers your client might inspect
   });
+
+  app.connectMicroservice<RmqOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: ['amqp://localhost:5672'],
+      queue: 'notification-queue',
+      queueOptions: { durable: false },
+    },
+  });
+
+  // 3) start BOTH the microservice(s) AND the HTTP listener
+  await app.startAllMicroservices();  // brings up the RMQ consumer(s)
   await app.listen(conf.getOrDefault<number>('notification.port'));
   logger.log(`Webserver is running on port ${conf.getOrDefault<number>('notification.port')}`);
 }

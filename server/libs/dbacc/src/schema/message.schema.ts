@@ -30,16 +30,16 @@ import { ModelNameEnum } from "@app/types";
 })
 export class MessageType extends BaseSchema {
   @Prop({ type: mongoose.Types.ObjectId, ref: ModelNameEnum.USER, required: true })
-  createdBy!: mongoose.Types.ObjectId;
+  createdBy!: string;
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: ModelNameEnum.USER, required: true })
-  seenBy!: mongoose.Types.ObjectId[];
+  @Prop({ type: [mongoose.Types.ObjectId], ref: ModelNameEnum.USER, default: [] })
+  seenBy!: string[];
 
-  @Prop({ type: String }) 
+  @Prop({ type: [String], default: [] }) 
   reactions!: string[];
 
   @Prop({ type: String, required: true })
-  content!: string;
+  text!: string;
 
   @Prop({ type: Boolean, default: false })
   isDeleted!: boolean;
@@ -49,6 +49,9 @@ export class MessageType extends BaseSchema {
 
   @Prop({ type: Date, default: Date.now })
   editedAt!: Date;
+
+  @Prop({ type: mongoose.Types.ObjectId, ref: ModelNameEnum.CONVERSATION, required: true })
+  conversationId!: string;
 }
 
 export const MessageSchema = SchemaFactory.createForClass(MessageType);

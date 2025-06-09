@@ -20,7 +20,9 @@ export class NotificationServerService {
     const subject = new Subject<{ data: NotificationData}>();
     const existing = this.clients.get(userId) || [];
     existing.push(subject);
+    console.log(existing)
     this.clients.set(userId, existing);
+    console.log(this.clients);
 
     // setInterval(() => {
     //   // console.log('sending')
@@ -36,8 +38,11 @@ export class NotificationServerService {
    */
   sendToUser(userId: string, payload: NotificationData) {
     this.saveNotification(payload)
+    console.log(this.clients);
     const subjects = this.clients.get(userId) || [];
+    console.log(subjects);
     for (const subj of subjects) {
+      console.log(payload)
       subj.next({ data: payload});
     }
   }
@@ -57,7 +62,7 @@ export class NotificationServerService {
   }
 
   private saveNotification(notification: NotificationData) {
-    if(notification.topic === NotificationTopicEnum.UPLOAD) return;
+    if(notification.topic !== NotificationTopicEnum.NOTIFICATION) return;
     this.notificationModel.create(notification);
   }
 }

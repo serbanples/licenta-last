@@ -48,7 +48,7 @@ export const UserViewEdit: React.FC<UserViewEditProps> = ({ user, isEditable, is
       </header>
 
       {/* Main full-page form */}
-      <main className="flex-1 overflow-auto p-6">
+      <main className="flex-1 p-6">
         <Card className="h-full">
           <CardHeader>
             <CardTitle>

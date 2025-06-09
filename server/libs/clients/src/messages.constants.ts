@@ -19,3 +19,16 @@ export const userSuggest = 'core.users.suggest';
 
 export const notificationBrowse = 'core.notifications.browse';
 export const notificationUpdateSeen = 'core.notifications.updateSeen';
+
+export const conversationFindByID = 'core.conversations.findById';
+export const conversationBrowse = 'core.conversations.browse';
+export const conversationCreate = 'core.conversations.create';
+export const conversationUpdate = 'core.conversations.update';
+export const conversationDelete = 'core.conversations.delete';
+export const conversationAddUser = 'core.conversations.addUser';
+
+export const messageBrowse = 'core.messages.browse';
+export const messageCreate = 'core.messages.create';
+export const messageUpdate = 'core.messages.update';
+export const messageDelete = 'core.messages.delete';
+

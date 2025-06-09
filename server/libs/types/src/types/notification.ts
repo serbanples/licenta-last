@@ -7,4 +7,5 @@ export interface NotificationData {
 export enum NotificationTopicEnum {
     UPLOAD = 'upload',
     NOTIFICATION = 'notification',
+    UPDATE_UNREAD = 'update_unread'
 }

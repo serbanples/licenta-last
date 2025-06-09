@@ -14,8 +14,6 @@ export class ConversationModel extends AbstractModel<ConversationType> {
   protected override textSearchFields: string[] = ['title', 'description'];
   protected override populateOptions: PopulateOpts = [{
     path: 'participants', model: ModelNameEnum.USER, select: 'email fullName'
-  }, {
-    path: 'messages', model: ModelNameEnum.MESSAGE, select: 'content createdBy seenBy createdAt updatedAt',
   }];
 
   /**

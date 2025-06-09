@@ -13,6 +13,7 @@ export interface NotificationData {
 export enum NotificationTopicEnum {
     UPLOAD = 'upload',
     NOTIFICATION = 'notification',
+    UPDATE_UNREAD = 'update_unread'
 }
 
 export const useNotifications = () => {
@@ -38,6 +39,7 @@ export const useNotifications = () => {
 
     useEffect(() => {
         if(sseNewValue) {
+            console.log(sseNewValue)
             setNotifications(prev => [...prev, sseNewValue]);
         }
     }, [sseNewValue])

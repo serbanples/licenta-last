@@ -15,9 +15,15 @@ class SSEService {
   private topics: Map<string, Set<Callback>> = new Map();
   private reconnectInterval = 1000;
   private maxReconnectInterval = 30000;
+  private static instance: SSEService;
 
-  constructor(private url: string) {
+  private constructor(private url: string) {
     this.connect();
+  }
+
+  static getInstance(url: string) {
+    if(!this.instance) this.instance = new SSEService(url);
+    return this.instance
   }
 
   /** Initialize EventSource and bind handlers */
@@ -55,11 +61,6 @@ class SSEService {
 
   /** Dispatch incoming data to all matching topic subscribers */
   private dispatch(data: Record<string, any>): void {
-    // Object.entries(data).forEach(([key, value]) => {
-    //   const handlers = this.topics.get(key);
-    //   console.log(handlers)
-    //   handlers?.forEach((cb) => cb(value));
-    // });
     const topic = data.topic;
     console.log(topic);
     console.log(this.topics)
@@ -105,17 +106,15 @@ class SSEService {
   }
 }
 
-// Singleton instance pointing at your SSE endpoint
-const sseService = new SSEService('http://localhost:5610/sse/events');
-
 /**
  * Subscribe to an SSE topic.
  */
 export function subscribeToTopic<T>(
+  instance: SSEService,
   topic: string,
   callback: Callback<T>
 ): () => void {
-  return sseService.subscribe(topic, callback);
+  return instance.subscribe(topic, callback);
 }
 
 /**
@@ -125,7 +124,8 @@ export function useSSETopic<T>(topic: string): T | undefined {
   const [value, setValue] = useState<T>();
 
   useEffect(() => {
-    const unsubscribe = subscribeToTopic<T>(topic, setValue);
+    const instance = SSEService.getInstance('http://localhost:5610/sse/events')
+    const unsubscribe = subscribeToTopic<T>(instance, topic, setValue);
     return () => unsubscribe();
   }, [topic]);
 

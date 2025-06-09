@@ -17,3 +17,11 @@ export const USER_FRIENDS_MINE_URL = '/users/browse-friends';
 
 export const NOTIFICATIONS_BROWSE = '/notifications/browse';
 export const NOTIFICATIONS_UPDATE_SEEN = '/notifications/updateSeen';
+
+export const CONVERSATIONS_BROWSE = '/chat/conversations/browse';
+export const CONVERSATIONS_CREATE = '/chat/conversations/create';
+
+export const MESSAGES_BROWSE = '/chat/messages/browse';
+
+
+export const WS_SERVER_URL = 'http://localhost:3001/chat'

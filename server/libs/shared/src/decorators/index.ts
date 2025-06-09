@@ -6,3 +6,4 @@ export * from './autorization.decorator'
 export * from './minio-inject.decorator'
 export * from './payload-user-context.decorator';
 export * from './payload-data.decorator'
+export * from './ws-user-context.decorator';

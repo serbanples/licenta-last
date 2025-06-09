@@ -8,7 +8,7 @@ export abstract class AbstractModel<ModelType extends Document> {
   protected abstract populateOptions: PopulateOpts;
   protected abstract textSearchFields: string[];
   protected readonly Model: Model<ModelType>;
-  private loggerService: LoggerService;
+  protected loggerService: LoggerService;
 
   constructor(model: Model<ModelType>, logger: LoggerService) {
     this.Model = model;
@@ -96,7 +96,7 @@ async findWithPagination(pagination: QueryPaginationFilter, query: object = {}, 
                     fromItem: fromItem,
                     perPage: pageSize,
                     totalPages: totalPages,
-                    count: _.size(response),
+                    count: _.size(response) + fromItem,
                     totalCount: count
                 }
             }
@@ -107,7 +107,6 @@ async findWithPagination(pagination: QueryPaginationFilter, query: object = {}, 
 async create(object: object): Promise<ModelType> {
     if(!this.Model) throw new Error('Setup method was not called!');
 
-    console.log(object);
     return this.Model.create(object)
         .then(response => response.toObject() as ModelType)
         .catch(error => { this.loggerService.error(error); throw error; })

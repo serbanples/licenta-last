@@ -23,6 +23,17 @@
         "notification": {
             "browse": true,
             "updateSeen": true
+        },
+        "conversation": {
+            "browse": true,
+            "create": true,
+            "update": true,
+            "delete": true,
+            "addUser": true
+        },
+        "message": {
+            "browse": true,
+            "create": true
         }
     },
     "admin": {
@@ -49,6 +60,17 @@
         "notification": {
             "browse": true,
             "updateSeen": true
+        },
+        "conversation": {
+            "browse": true,
+            "create": true,
+            "update": true,
+            "delete": true,
+            "addUser": true
+        },
+        "message": {
+            "browse": true,
+            "create": true
         }
     },
     "master": {
@@ -75,6 +97,17 @@
         "notification": {
             "browse": true,
             "updateSeen": true
+        },
+        "conversation": {
+            "browse": true,
+            "create": true,
+            "update": true,
+            "delete": true,
+            "addUser": true
+        },
+        "message": {
+            "browse": true,
+            "create": true
         }
     }
 }

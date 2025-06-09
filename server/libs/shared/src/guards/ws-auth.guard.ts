@@ -5,12 +5,13 @@ import { AuthProxyService } from '@app/clients';
 import { RequestWrapper } from '@app/types';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorators';
+import { Socket } from 'socket.io';
 
 /**
  * Auth guard class used to authenticate users on protected routes.
  */
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class WsAuthGuard implements CanActivate {
   /**
    * Constructor method.
    */
@@ -32,7 +33,7 @@ export class AuthGuard implements CanActivate {
     ]);
     if (isPublic) return of(true);
 
-    const request: RequestWrapper = context.switchToHttp().getRequest();
+    const request = context.switchToWs().getClient<Socket>();
     const token = this.extractToken(request);
 
     if (_.isNil(token)) {
@@ -41,7 +42,7 @@ export class AuthGuard implements CanActivate {
 
     return this.authClient.whoami({ accessToken: token }).pipe(
       map((userContext) => {
-        request.user = userContext;
+        (request as any).user = userContext;
         return true;
       }),
       catchError(() => {
@@ -56,8 +57,8 @@ export class AuthGuard implements CanActivate {
    * @param {RequestWrapper} request request object.
    * @returns {string} token.
    */
-  private extractToken(request: RequestWrapper): string | undefined {
-    const accessToken = request.headers.cookie?.split('=')[1];
+  private extractToken(request: Socket): string | undefined {
+    const accessToken = request.handshake.headers.cookie?.split('=')[1];
 
     return accessToken;
   }
