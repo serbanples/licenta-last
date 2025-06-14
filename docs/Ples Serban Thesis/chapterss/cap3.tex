@@ -1,8 +1,6 @@
 
 \chapter{Application Description}
 
-In this chapter present the application using code snippets, diagrams.
-
 \section{Architecture}
 
 The application uses a combination of Event Driven architecture and Request-Response architecture, making as much use as possible of Node JS's built in capabilities for handling multiple operations on a single thread using concurrency and asynchronous programming.
@@ -22,33 +20,6 @@ Since this application is heavily focused on microservices, here is a short desc
     \item \textbf{Notification Server} - Server exposing a route for handling SSE (Server Sent Events). This server is the one handling in-app notifications. 
 \end{itemize}
 
-Authentication Logic (e.g. Figure \ref{fig:authLogic}).
-
-File upload Logic (e.g Figure \ref{fig:uploaderLogic}).
-
-Use Case Diagram (e.g Figure \ref{fig:useCase}).
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=1\linewidth]{login.drawio.png}
-    \caption{Authentication Logic Diagram}
-    \label{fig:authLogic}
-\end{figure}
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=1\linewidth]{file uplaod.drawio.png}
-    \caption{File Uploader Logic Diagram}
-    \label{fig:uploaderLogic}
-\end{figure}
-
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=1\linewidth]{Use Case Licenta.drawio.png}
-    \caption{Use Case Diagram}
-    \label{fig:useCase}
-\end{figure}
-
-\newpage
 \section{Features}
 The main features of the application are: a steady authentication, a live-chat for allowing students to study in groups and a file-sharing system for easily sharing study notes.
 
@@ -64,6 +35,13 @@ Method: POST
 Request Body: JSON Object containing fullname, email, password and confirmation password.
 
 Response: JSON Object containing a success message if the request was successful
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{licenta-register.drawio.png}
+  \caption*{Register Flow}
+  \label{fig:register-flow}
+\end{figure}
 
 \textbf{Verify Account}: When users click the verification link, the system extracts the token and searches the database for a matching, unexpired record. If valid, it marks the user’s account as verified, removes the token to prevent reuse, and returns a success response, enabling full access to login and other protected features.
 
@@ -85,6 +63,13 @@ Method: POST
 Request Body: JSON Object containing email, and password.
 
 Response: JSON Object containing a success message if the request was successful.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{licenta-login.drawio.png}
+  \caption*{Login Flow}
+  \label{fig:login-flow}
+\end{figure}
 
 \textbf{Reset Password}: When a password reset is requested, users provide their email address. The system generates a short-lived, cryptographically random reset token, stores it, and emails a reset link. Upon visiting the link and submitting a new password, the system validates the token, updates the password hash and deletes the token.
 
@@ -114,48 +99,134 @@ Method: Get
 Response: JSON Object containing userId, role and email of the logged in user if the request was successful.
 
 \subsection{Live-chat}
+The main part of any peer to peer platform is a real-time chat. Since this application focuses on providing students a way to communicate with each other in order to make stuying togheter easier, a real-time chat is a core functionality that I had to implement.
+
+The real-time chat is implemented using Web Sockets. Even though Web Sockets are usually used for machine to machine communication, most applications that include a real-time chat like Microsoft Teams, Discord, Whatsapp use Web Sockets under to hood.
+
+Web Sockets work by creating a bidirectional communication channel between clients and servers. Data is transported on this channel using messages. Each message must have a defined 'name' and maybe have some content.
+
+In my implementation, I started by thinking about all of the messages that would be used inside of a chat application. After careful consideration, I ended up with 5 message types that my application must use:
+\begin{itemize}
+    \item \textbf{Join Conversation} - Message sent from the client side, containing the user authentication token and a conversationId. The server then checks if the user is a participant of that conversation, and responds back with a message of 'joined-conversation'.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{licenta-join-conversation.drawio.png}
+        \caption*{Join Conversation Flow}
+        \label{fig:join-conversation-flow}
+    \end{figure}
+    \item \textbf{Leave Conversation} - This message is sent by the client side, when a user decides to leave a conversation. Leaving a conversation is done by either joining a different conversation, navigating to a different part of the application or closing the application. For this message, the server just removes the client from the conversation session.
+    \item \textbf{Send Message} - This is the last and most importand message sent from the client application. Everytime the user creates a message and decides to send it, the application will send a message containing the user`s authentication token, message content and conversationId. After creating a database entry with the message details, the server responds back with 'recieve-message', in order to alret the application that a new message appeared.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{licenta-ws.drawio.png}
+        \caption*{Send Message Flow}
+        \label{fig:send-message-flow}
+    \end{figure}
+    \item \textbf{Recieve Message} - The server sends this message after creating a entry in the database for the message sent by a user. The content of this message is the full database entry created. The client application listens for this message and correctly displays the new chat.
+    \item \textbf{Joined Conversation} - After a user joins a conversation, the server sends this message back to the client application. This notifies the application that it can let the user start sending messages and recieving messages.
+\end{itemize}
+
+\subsection{File Uploader}
+
+
 
 \section{Technology Stack}
-Since this is a web browser based application,it mainly consists of JavaScript/TypeScript code on the client side. However, due to JavaScript`s asynchronous nature, and the different microservices that must handle asynchronous operations, the server side code is also implemented in JavaScript/TypeScript.
+
+The \emph{Cloud Class} application is a fully browser-based system built end-to-end in TypeScript/JavaScript.  Both client and server leverage modern, asynchronous architectures and microservices to ensure scalability, maintainability, and real-time interactivity.  This section outlines the key technologies and frameworks that form the backbone of our solution.
+
 \subsection{Server Implementation}
-The server for 'Cloud Class' contains all of the logic at the backbone of the application, offering a solid foundation for the client`s app functionalities.
+
+The backend of \emph{Cloud Class} is implemented as a suite of modular microservices responsible for business logic, data persistence, and event handling.  All services are written in \mbox{TypeScript}, compiled to JavaScript, and orchestrated via Docker.
 
 \begin{itemize}
-    \item \textbf{Programming Language:} \textit{TypeScript} - TypeScript is a statically typed superset of JavaScript that compiles down to plain JavaScript. It introduces optional type annotations, interfaces, and advanced tooling for improved code quality, maintainability, and developer productivity, enabling safer large-scale application development.
-    \item \textbf{Runtime Environment:} \textit{Node.js} - Node.js is a cross-platform, event-driven JavaScript runtime built on Chrome’s V8 engine. It uses non-blocking I/O and an event loop to efficiently handle concurrent connections, making it ideal for scalable network applications, microservices, and real-time servers.
-    \item \textbf{Framework:} \textit{Nest.js} - NestJS is a progressive Node.js framework built with TypeScript, leveraging decorators and dependency injection to structure applications into modular, testable components. It abstracts common server-side patterns, integrates seamlessly with Express or Fastify, and supports GraphQL, WebSockets, and microservices out of the box.
-    \item \textbf{Database:} \textit{MongoDB} - MongoDB is a document-oriented NoSQL database that stores data in flexible, JSON-like BSON documents. It offers horizontal scalability through sharding, built-in replication for high availability, and a powerful query language. MongoDB suits dynamic schemas, real-time analytics, and modern web or mobile applications.
-    \item \textbf{Storage:} \textit{MinIO S3} -MinIO is a high-performance, Kubernetes-native object storage server compatible with the Amazon S3 API. It provides erasure coding, bitrot protection, and encryption for secure, scalable storage. MinIO excels in private cloud or edge deployments, supporting multi-tenancy and lightweight resource footprints.
-    \item \textbf{Real Time Communication:} \textit{Socket.IO and Server Sent Events (SSE)} - Socket.IO enables real-time, bidirectional communication between clients and servers over WebSockets and fallback transports, ideal for chat, gaming, or live updates. Server-Sent Events (SSE) provide unidirectional, low-overhead streams from server to browser. Both facilitate reactive interfaces and event-driven architectures.
-    \item \textbf{Logging:} \textit{Elastic Search} - Elasticsearch is a distributed, RESTful search and analytics engine built on Apache Lucene. It indexes documents for lightning-fast full-text, structured, and geo-queries. Elasticsearch scales horizontally, supports real-time data ingestion, and powers features like autocomplete, logging pipelines, and business intelligence dashboards.
-    \item \textbf{Testing:} \textit{Jest} - Jest is a delightful JavaScript testing framework maintained by Facebook. It offers zero-configuration setup, snapshot testing, and built-in mocking utilities. Jest runs tests in parallel for speed and provides rich watch-mode feedback, making test-driven development smooth for React, Node.js, and beyond.
-    \item \textbf{Message Queues:} \textit{RabbitMQ and BullMQ} - RabbitMQ is an open-source message broker implementing AMQP. It offers flexible routing, message acknowledgments, clustering, and high availability. Through plugins and management UI, you can monitor queues and extend functionality. RabbitMQ enables reliable, asynchronous communication between distributed applications and microservices. BullMQ is a Node.js library for robust background job processing using Redis. With a TypeScript-first API, it supports job queues, workers, rate limiting, repeatable jobs, and atomic operations. BullMQ ensures reliable task scheduling for use cases like email delivery, data pipelines, and notification dispatch.
+  \item \textbf{TypeScript}  
+    \begin{itemize}
+      \item A statically typed superset of JavaScript that compiles to ES2019.  
+      \item Enables interface-driven design, strong type checking, and advanced IDE support (e.g., IntelliSense).  
+      \item Facilitates early detection of errors, consistent code formatting (TSLint / ESLint), and straightforward refactoring in large codebases.
+    \end{itemize}
+
+  \item \textbf{Node.js}  
+    \begin{itemize}
+      \item Event-driven, non-blocking I/O runtime built on Chrome’s V8 engine.  
+      \item Ideal for handling high concurrency with minimal resource overhead.  
+      \item Integrated with PM2 for process management, automatic restarts, and memory monitoring in production.
+    \end{itemize}
+
+  \item \textbf{NestJS}  
+    \begin{itemize}
+      \item Progressive Node.js framework leveraging decorators and dependency injection.  
+      \item Promotes a modular architecture: controllers, providers, and gateways can be developed and tested independently.  
+      \item Native support for REST, GraphQL, WebSockets, and microservice patterns (TCP, gRPC, Redis-based transport).
+    \end{itemize}
+
+  \item \textbf{MongoDB}  
+    \begin{itemize}
+      \item NoSQL document database storing data in flexible BSON format.  
+      \item Supports horizontal scaling via sharding, automatic replica sets for high availability, and ACID transactions across multiple documents (v4.0+).  
+      \item Optimized for rapid development cycles, enabling schema evolution without downtime.
+    \end{itemize}
+
+  \item \textbf{MinIO (S3-compatible)}  
+    \begin{itemize}
+      \item High-performance, Kubernetes-native object storage with Amazon S3 API compatibility.  
+      \item Features erasure coding, bitrot protection, server-side encryption, and multi-tenant isolation.  
+      \item Deployed as a StatefulSet in Kubernetes, ensuring persistent volumes and dynamic scaling.
+    \end{itemize}
+
+  \item \textbf{Real-Time Communication}  
+    \begin{itemize}
+      \item \emph{Socket.IO}: Bidirectional WebSocket library with automatic fallback to HTTP long-polling. Used for live chat, collaborative editing, and presence notifications.  
+      \item \emph{Server-Sent Events (SSE)}: Lightweight, one-way event streams for broadcasting state changes (e.g., live class schedules, system alerts) with minimal overhead.
+    \end{itemize}
+
+  \item \textbf{Logging \& Analytics:}  
+    \begin{itemize}
+      \item \emph{Elasticsearch \& Kibana}: Distributed search and analytics engine powering full-text search, structured queries, and real-time log aggregation.  
+      \item Logs are shipped via Filebeat into an ELK stack, enabling dashboards for performance monitoring, error tracking, and usage metrics.
+    \end{itemize}
+
+  \item \textbf{Testing}  
+    \begin{itemize}
+      \item \emph{Jest}: Zero-configuration JavaScript testing framework for unit and integration tests, featuring snapshot testing and code coverage reports.  
+    \end{itemize}
+
+  \item \textbf{Message Queues \& Background Jobs:}  
+    \begin{itemize}
+      \item \emph{RabbitMQ}: AMQP broker for reliable, complex routing of messages between microservices (e.g., task dispatch, order processing).  
+      \item \emph{BullMQ}: Redis-backed job queue for scheduled and repeatable tasks such as email delivery, report generation, and notification bursts.  
+      \item Combined to balance high-throughput event streams (RabbitMQ) with lightweight, retry-capable background jobs (BullMQ).
+    \end{itemize}
 \end{itemize}
 
 \subsection{Client Implementation}
-The client application for 'Cloud Class' offers a easy-to-use interface, allowing users to collaborate easily with each other. 
 
+The frontend of \emph{Cloud Class} is a single-page application delivering responsive, component-driven user experiences.  Written in TypeScript and React, it communicates with backend microservices via REST, and real-time channels.
 
 \begin{itemize}
-    \item \textbf{HTML:} - HTML (Hyper Text Markup Language) is the standard markup language for creating web pages. It structures content using elements like headings, paragraphs, links, and media embeds. Semantic tags improve accessibility and SEO, while forms and tables enable user input and data presentation, forming the backbone of every website.
-    \item \textbf{CSS:} - CSS (Cascading Style Sheets) styles and layouts HTML content, controlling colors, typography, spacing, and responsive behavior. With selectors, properties, and media queries, it allows designs to adapt across devices. Modern features like Flexbox, Grid, and custom properties enable complex, maintainable, and dynamic user interfaces with minimal code.
-    \item \textbf{React:} - React is a JavaScript library for building component-based user interfaces. It uses a virtual DOM for efficient updates and a declarative syntax with JSX. React’s ecosystem includes hooks for state and side effects, and tools like React Router and Redux, making it ideal for complex, interactive web apps.
-    \item \textbf{Socket.IO:} - React is a JavaScript library for building component-based user interfaces. It uses a virtual DOM for efficient updates and a declarative syntax with JSX. React’s ecosystem includes hooks for state and side effects, and tools like React Router and Redux, making it ideal for complex, interactive web apps.
+  \item \textbf{HTML5 \& Semantic Markup}  
+    \begin{itemize}
+      \item Establishes the document structure with accessibility in mind (ARIA roles, landmarks).  
+      \item Leveraged for SEO optimization, rich media embedding, and form-based user inputs (e.g., quizzes, surveys).
+    \end{itemize}
+
+  \item \textbf{CSS3 \& Responsive Design}  
+    \begin{itemize}
+      \item Utilizes Flexbox, Grid layouts, and custom properties (CSS variables) for adaptable, maintainable styling.  
+      \item Media queries ensure seamless rendering across desktop, tablet, and mobile viewports.
+    \end{itemize}
+
+  \item \textbf{React \& TypeScript}  
+    \begin{itemize}
+      \item Component-based architecture with JSX syntax and a virtual DOM for efficient UI updates.  
+    \end{itemize}
+
+  \item \textbf{Real-Time Updates (Socket.IO Client)}  
+    \begin{itemize}
+      \item Establishes persistent WebSocket connections for instant notifications (e.g., new messages, collaborative whiteboard changes).  
+      \item Automatic reconnection and event buffering ensure continuity during transient network issues.
+    \end{itemize}
 \end{itemize}
-
-% \begin{defn} Angular
-% \end{defn}
-% \begin{defn} Node JS
-% \end{defn}
-% \begin{defn} Minio S3
-% \end{defn}
-% \begin{defn} Mongo DB
-% \end{defn}
-% \begin{defn} Rabbit MQ
-% \end{defn}
-
-\section{References}
-The bibliography has to be referenced in thesis content using cite (e.g. \cite{Bersani}).
 
 \section{Interface}
 Present App interface using Screenshots?
@@ -168,66 +239,264 @@ Each figure has to have a caption that is a suggestive description of what  the 
     \label{fig:siglaUVT}
 \end{figure}
 
-\section{Algorithm pseudo-code}
-Present pseudo-code and actual code for a feature.
-
-Pseudo-code is a formal way to describe an algorithm, is more clear than a textual description ore code ( e.g. Algorithn \ref{alg:alg_ex}).
-
-\begin{algorithm}[!ht]
-\caption{An algorithm with caption}\label{alg:alg_ex}
-\begin{algorithmic}[1]
-\Require $n \geq 0$
-\Ensure $y = x^n$
-\State $y \gets 1$
-\State $X \gets x$
-\State $N \gets n$
-\While{$N \neq 0$}
-\If{$N$ is even}
-    \State $X \gets X \times X$
-    \State $N \gets \frac{N}{2}$  \Comment{This is a comment}
-\ElsIf{$N$ is odd}
-    \State $y \gets y \times X$
-    \State $N \gets N - 1$
-\EndIf
-\EndWhile
-\end{algorithmic}
-\end{algorithm}
-
-\section{Adding code}
-If it necessary to add  some code from the application, do not use print-screens, use  listing  (e.g. listing \ref{lst:p1}).
-\begin{lstlisting}[language=Python, numbers=left,
-    stepnumber=1, caption=Un exemplu de cod python, label=lst:p1]
-import numpy as np
-    
-def incmatrix(genl1,genl2):
-    m = len(genl1)
-    n = len(genl2)
-    M = None #to become the incidence matrix
-    VT = np.zeros((n*m,1), int)  #dummy variable
-    
-    #compute the bitwise xor matrix
-    M1 = bitxormatrix(genl1)
-    M2 = np.triu(bitxormatrix(genl2),1) 
-
-    for i in range(m-1):
-        for j in range(i+1, m):
-            [r,c] = np.where(M2 == M1[i,j])
-            for k in range(len(r)):
-                VT[(i)*n + r[k]] = 1;
-                VT[(i)*n + c[k]] = 1;
-                VT[(j)*n + r[k]] = 1;
-                VT[(j)*n + c[k]] = 1;
-                
-                if M is None:
-                    M = np.copy(VT)
-                else:
-                    M = np.concatenate((M, VT), 1)
-                
-                VT = np.zeros((n*m,1), int)
-    
-    return M
-\end{lstlisting}
-
 \section{Database Structure}
 
-Present Strucutres for all database documents used in the application, using code snippets, diagrams, photos
+\subsection{Overview}
+
+Relational databases have long been the default choice for structured data storage, but modern web applications often require far greater flexibility and horizontal scalability than traditional SQL systems can easily provide.  NoSQL databases, in particular document-oriented stores, have emerged to meet these requirements by allowing each record to be a self-describing JSON-like document rather than rigid rows and columns.  This schemaless approach enables rapid evolution of data models as application requirements change, without costly migrations or downtime.
+
+MongoDB is one of the most popular document-oriented NoSQL databases.  It persists data as BSON (Binary JSON) documents, offering rich query capabilities, indexing on nested fields, and atomic operations on single documents.  With built-in support for horizontal sharding and automatic replica sets, MongoDB can scale across many servers while providing high availability and fault tolerance.  Moreover, its native JSON syntax for queries and updates makes the developer experience intuitive when working with JavaScript/TypeScript on both client and server.
+
+To bridge the gap between the dynamic nature of MongoDB and the static typing guarantees of TypeScript, we employ Mongoose as an Object Document Mapper (ODM).  Mongoose allows us to define strict schemas, enforce validation rules, and hook into lifecycle events (middleware) for tasks like hashing passwords or populating references.  This combination of MongoDB`s flexible document model with Mongoose`s type-safe schema definitions ensures both agility during development and robustness in production.
+
+\subsection{Data Modeling}
+
+In a schemaless document store like MongoDB, documents can in principle contain any structure.  However, imposing a schema at the application level provides consistency, validation and clarity.  Data modeling involves defining, for each collection, the shape of its documents: field names, data types, default values, required properties and indexing strategies.  This layer of structure enables the application to enforce invariants (e.g.\ “email must be a non-empty string” or “createdAt must always be present”), catch errors early, and generate optimized queries.
+
+Schema options often include:
+\begin{itemize}
+  \item \textbf{Automatic Timestamps:}  Adding \texttt{createdAt} and \texttt{updatedAt} fields to every document to track its lifecycle.
+  \item \textbf{Serialization Transforms:}  Customizing how documents are converted to JSON—for example converting internal object IDs into strings and removing internal metadata fields.
+  \item \textbf{Validation Rules:}  Specifying which fields are required, their allowed types (String, Number, Boolean, Date, ObjectId, Array, etc.), and constraints such as unique or enum values.
+  \item \textbf{Default Values:}  Providing sensible defaults (e.g.\ an empty array for list fields, `false` for boolean flags) to simplify document creation.
+\end{itemize}
+
+Modeling relationships in a document database can be achieved in two main ways:
+\begin{itemize}
+  \item \textbf{References:}  Storing the identifier of a related document (typically an ObjectId) in a field.  This keeps collections normalized and minimizes duplication, at the cost of additional lookups when joining data at query time.
+  \item \textbf{Embedded Subdocuments:}  Nesting related data directly within a parent document.  This approach denormalizes data for faster reads and atomic updates of the entire structure, best suited for “owns” or “contains” relationships with bounded subdocument sizes.
+\end{itemize}
+
+Finally, careful use of indexes is critical for query performance and data integrity:
+\begin{itemize}
+  \item \textbf{Unique Indexes:}  Enforce uniqueness on fields such as email addresses or usernames to prevent duplicate accounts.
+  \item \textbf{Compound Indexes:}  Accelerate queries involving multiple fields (e.g.\ sorting messages by conversation and timestamp).
+  \item \textbf{TTL Indexes:}  Automatically expire documents after a given time, useful for short-lived tokens or audit logs.
+\end{itemize}
+
+By combining a clear schema definition with appropriate relationship modeling and indexing, the application gains both the flexibility of a document store and the reliability of a structured database. 
+
+\subsection{Schema Definitions}
+
+Below we present each schema with its MongoDB collection name and a concise description of the most important fields and relationships.  For clarity, we use a description list for each schema.
+
+\subsubsection{Account Schema (\texttt{accounts})}
+Models user authentication, authorization, and credential management.
+\begin{description}
+  \item[\texttt{email} (\emph{String}, required, unique)]  
+    Primary login identifier, enforced as unique to prevent duplicates.
+  \item[\texttt{password} (\emph{String}, required)]  
+    Hashed credential; excluded from default query results for security.
+  \item[\texttt{role} (\emph{String}, enum \{USER, ADMIN\})]  
+    Access level determining permissions within the application.
+  \item[\texttt{isVerified} (\emph{Boolean}, default: \texttt{false})]  
+    Indicates whether the user`s email has been confirmed.
+  \item[\texttt{accountVerificationToken}, \texttt{verificationTokenExpiration}]  
+    Token and expiry timestamp for email verification workflows.
+  \item[\texttt{passwordResetToken}, \texttt{resetTokenExpiration}]  
+    Token and expiry timestamp for password recovery processes.
+  \item[\texttt{profileId} (\emph{ObjectId})]  
+    Reference linking account credentials to the corresponding user profile.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{account-schema.png}
+  \caption*{Account Schema}
+  \label{fig:acc-shcema}
+\end{figure}
+
+\subsubsection{User Schema (\texttt{users})}
+Represents user profiles.
+\begin{description}
+  \item[\texttt{email}, \texttt{fullName} (\emph{String}, required, unique\textsuperscript{*})]  
+    Basic identity fields; email is unique to enforce one profile per account.
+  \item[\texttt{description} (\emph{String})]  
+    Optional biography or profile summary.
+\end{description}
+\textsuperscript{*}An index enforces email uniqueness at the database level.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{profile-schema.png}
+  \caption*{User Schema}
+  \label{fig:profile-schema}
+\end{figure}
+
+\subsubsection{Conversation Schema (\texttt{conversations})}
+Defines chat groups and direct-message threads.
+\begin{description}
+  \item[\texttt{participants} (\emph{[ObjectId]}, required)]  
+    List of user IDs involved in the conversation.
+  \item[\texttt{title}, \texttt{description} (\emph{String})]  
+    Optional metadata for group chats or topic summaries.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{conversation-schema.png}
+  \caption*{Conversation Schema}
+  \label{fig:conversation-schema}
+\end{figure}
+
+\subsubsection{Message Schema (\texttt{messages})}
+Stores individual chat messages within conversations.
+\begin{description}
+  \item[\texttt{createdBy} (\emph{ObjectId}, required)]  
+    Authoring user`s ID.
+  \item[\texttt{conversationId} (\emph{ObjectId}, required)]  
+    Parent conversation reference.
+  \item[\texttt{text} (\emph{String}, required)]  
+    Message content.
+  \item[\texttt{seenBy} (\emph{[ObjectId]}, default: \texttt{[]})]  
+    IDs of users who have read the message.
+  \item[\texttt{reactions} (\emph{[String]}, default: \texttt{[]})]  
+    Emoji or reaction identifiers attached by users.
+  \item[\texttt{isDeleted}, \texttt{isEdited} (\emph{Boolean}, default: \texttt{false})]  
+    Flags for deletion and edit status.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{message-schema.png}
+  \caption*{Message Schema}
+  \label{fig:message-schema}
+\end{figure}
+
+\subsubsection{Notification Schema (\texttt{notifications})}
+Captures system alerts and user-to-user notifications.
+\begin{description}
+  \item[\texttt{sendTo} (\emph{[ObjectId]}, required)]  
+    Recipients of the notification.
+  \item[\texttt{topic} (\emph{String}, enum)]  
+    Notification category (e.g.\ new message, new reaction to message).
+  \item[\texttt{data} (\emph{Object})]  
+    Payload containing contextual information (e.g.\ IDs, message previews).
+  \item[\texttt{isSeen} (\emph{Boolean}, default: \texttt{false})]  
+    Read/unread flag.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{notification-schema.png}
+  \caption*{Notification Schema}
+  \label{fig:notification-schema}
+\end{figure}
+
+
+\subsection{Indexes and Performance}
+
+To ensure low-latency queries and maintain data integrity, we define several indexes across our collections and deploy MongoDB in a clustered, highly available configuration.
+
+\paragraph{Indexes}
+\begin{itemize}
+  \item \textbf{Unique Indexes}
+    \begin{itemize}
+      \item \texttt{accounts.email}: enforces one account per email address.
+      \item \texttt{users.email}: guarantees unique user profiles.
+    \end{itemize}
+
+  \item \textbf{Single-Field Indexes}
+    \begin{itemize}
+      \item \texttt{messages.conversationId}: accelerates retrieval of all messages in a conversation.
+      \item \texttt{notifications.sendTo}: speeds up lookup of unread notifications for a given user.
+    \end{itemize}
+
+  \item \textbf{Compound Indexes}
+    \begin{itemize}
+      \item \texttt{messages.{conversationId, createdAt}}: supports paginated fetches of recent messages by conversation.
+      \item \texttt{conversations.participants}: optimizes queries for all conversations a user participates in.
+    \end{itemize}
+
+  \item \textbf{TTL Indexes}
+    \begin{itemize}
+      \item \texttt{accounts.verificationTokenExpiration}: automatically removes stale verification tokens.
+      \item \texttt{accounts.resetTokenExpiration}: expires old password-reset tokens without manual cleanup.
+    \end{itemize}
+\end{itemize}
+
+% \paragraph{Sharding and Replication}
+% \begin{itemize}
+%   \item \textbf{Replica Sets:}  
+%     Each MongoDB deployment runs as a three-node replica set, providing automatic failover and durable write acknowledgment with \texttt{w: "majority"} write concern.
+
+%   \item \textbf{Sharding:}  
+%     For collections with high write volume (notably \texttt{messages} and \texttt{notifications}), we use a hashed shard key on \texttt{conversationId} or \texttt{sendTo} respectively.  This distributes data evenly across shards and prevents hotspotting.
+
+%   \item \textbf{Read/Write Scaling:}  
+%     Secondary replicas handle read traffic for analytics and notification polling (configured with appropriate read preferences), while primaries manage transactional writes and TTL‐driven deletions.
+
+%   \item \textbf{Monitoring and Tuning:}  
+%     We leverage MongoDB’s built‐in performance advisor and metrics exporters (via Prometheus) to detect slow queries, adjust index definitions, and scale shards dynamically based on CPU, memory, and disk I/O.
+% \end{itemize}
+
+\section{Testing strategies}
+
+Robust automated testing is essential to maintain code quality, prevent regressions, and accelerate feature development.  In \emph{Cloud Class}, we leverage Jest—integrated with NestJS’s testing utilities—to implement a suite of unit tests covering all critical business logic, with a focus on authentication, file uploads, and message handling.
+
+\subsection{Framework and Configuration}
+
+\begin{itemize}
+  \item \textbf{Jest}  
+    \begin{itemize}
+      \item Default test runner for NestJS projects; supports mocks, spies, snapshot testing, and coverage reporting out of the box.
+      \item Configured via \texttt{jest.config.ts} to transform TypeScript, collect coverage, and ignore compiled output directories.
+    \end{itemize}
+
+  \item \textbf{NestJS Testing Module}  
+    \begin{itemize}
+      \item Uses \texttt{Test.createTestingModule()} to instantiate a lightweight application context.
+      \item Allows overriding providers with mocked implementations or in-memory substitutes (e.g.\ in-memory MongoDB) for isolation.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Unit Tests}
+
+I prioritized unit tests for core functionalities, ensuring that key features behave correctly under both normal and error conditions.
+
+\begin{itemize}
+  \item \textbf{Authentication}
+    \begin{itemize}
+      \item \texttt{signing up}: verifies password hashing, user creation, and error on duplicate email.
+      \item \texttt{validating users}: checks credential validation logic.
+      \item Edge cases: invalid credentials, expired tokens, and role-based access assertions.
+    \end{itemize}
+
+  \item \textbf{File Uploads}
+    \begin{itemize}
+      \item \texttt{upload file}: tests file-type validation, size limits, and interaction with MinIO/S3 API (mocked).
+      \item Error scenarios: unsupported formats, storage failures, and retry logic.
+    \end{itemize}
+
+  \item \textbf{Messages}
+    \begin{itemize}
+      \item \texttt{create message}: validates conversation existence and correct document shape.
+      \item \texttt{find by conversations}: tests pagination, sorting by timestamp, and filtering out deleted messages.
+      \item Mocking of Mongoose Model methods (\texttt{save()}, \texttt{find()}, \texttt{lean()}).
+    \end{itemize}
+\end{itemize}
+
+Each test file is co-located with its implementation in a \texttt{*.spec.ts} file.  I aimed for at least 80\% coverage on each core of the functionalities, using Jest`s coverage report as a way to monitor it.
+
+\section{Scalability and Performance Considerations}
+
+One of the foremost advantages of a microservice architecture is the ability to scale individual services independently, based on their specific resource demands.  In \emph{Cloud Class}, each of the eight microservices—such as Authentication, WebSocket Server, Uploader, and Notification—can be deployed in its own container and allocated CPU, memory, and I/O budgets that precisely match its workload.  During periods of high messaging activity, for example, the WebSocket Server can be horizontally scaled out to multiple replicas without affecting unrelated services like Uploader or Mailer.  Conversely, when file-upload traffic subsides, the Upload Server replicas can be scaled back to conserve cluster resources and reduce cost.
+
+Dynamic scaling is typically managed through Kubernetes` Horizontal Pod Autoscaler (HPA), which adjusts the number of running pods for each service in response to real-time metrics (CPU utilization, memory usage, or custom application-level metrics like request latency).  By setting sensible targets and thresholds, the system maintains consistent performance under fluctuating load while avoiding overprovisioning.  This elasticity ensures that end-users experience low latency and high throughput—even during peak usage—while keeping infrastructure spend proportional to actual demand.
+
+Beyond pure scaling, microservices also improve fault isolation and deployment agility, both of which contribute to overall performance resilience:
+
+\begin{itemize}
+  \item \textbf{Fault Isolation:}  A failure or performance degradation in one service (e.g.\ a heavy file upload in the Uploader Server) does not directly impact the availability or responsiveness of other services.
+  \item \textbf{Independent Deployment:}  Each service can be updated, rolled back, or redeployed without requiring a full system outage.  This reduces planned downtime and allows performance optimizations to be rolled out rapidly.
+  \item \textbf{Resource Specialization:}  Services with very different I/O patterns—such as compute-heavy data aggregation versus I/O-bound file transfers—can be placed on node pools with hardware tailored to their needs (e.g.\ SSD-backed nodes for storage services, high-CPU nodes for processing).
+\end{itemize}
+
+Finally, horizontal scaling and service isolation simplify capacity planning and permit near-linear performance gains: doubling the number of replicas for a stateless service generally doubles its throughput, up to the limits of downstream dependencies (such as the database).  To maximize this benefit, this application also employs deployment best practices such as:
+
+\begin{itemize}
+  \item \textbf{Caching Layers:} Introducing in-memory caches (e.g.\ Redis) at strategic service boundaries to offload read-heavy operations and reduce latency.
+  \item \textbf{Asynchronous Processing:} Offloading non-critical tasks (notifications) or resource intensive tasks (sending emails, file uploads) to message queues and background workers, smoothing out traffic spikes and decoupling end-user interactions from longer-running processes.
+\end{itemize}
+
+Together, these architectural patterns ensure that \emph{Cloud Class} can meet demanding performance requirements today while remaining flexible enough to grow with future user populations and feature sets.
