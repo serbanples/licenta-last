@@ -1,44 +1,41 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%% chap: title %%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \chapter{Related Work}\label{chapter:chap2}
 
+\section{Existing Solutions}
 
+A number of established platforms address parts of the collaboration and organization problem, but none combine document sharing, chat, study scheduling and real‐time video in a student‐centric package:
 
-\section{Existing Solution}
+\paragraph{Slack}\cite{Slack}  
+Slack is widely adopted in professional and academic circles for team communication.  Its channel-based model and rich integration ecosystem (e.g.\ file attachments, bots, external APIs) make it ideal for project-driven discussion.  However, Slack’s interface and feature set are geared toward corporate workflows; it lacks built-in study-session scheduling or academic resource management, and its cost structure can be prohibitive for student use.
 
-After careful research, some similar applications would include the following:
-\begin{enumerate}
-    \item \textbf{Slack}\cite{Slack} - Slack is a widely used team collaboration tool, particularly popular in professional and academic contexts. It enables users to create channels for specific topics or projects, making it suitable for organizing discussions and sharing resources. Additionally, Slack supports integrations with various applications and offers video call functionality, making it a versatile platform. However, Slack is designed primarily for professional teams and its interface may not specifically address the unique needs of student collaboration and study organization.
-    \item \textbf{Google Classroom}\cite{Classroom} - Google Classroom is widely used in educational settings for resource sharing and assignments. While it is more of an educational management tool, it integrates with Google Meet for video meetings and supports file sharing.
-    \item \textbf{Microsoft Teams}\cite{Teams} - Teams is used extensively in academic and corporate settings for collaboration. It supports chats, file sharing, and video meetings, making it a good platform for group study environments.
-    \item \textbf{NutriBiochem Mobile Application}\cite{NutriBiochem} - The NutriBiochem mobile application was developed as a learning resource for use in undergraduate biochemistry and nutrition education; specifically, the app was created for use in two courses in undergraduate Biochemistry and Nutrition at the University of Guelph Humber, although it was made freely available to the public through several different app stores and was promoted to students in several Biochemistry courses at the University of Guelph. While designed specifically to address the needs of these two specific courses, the content of the app (described below) is generalizable to most undergraduate courses that cover the fundamentals of human metabolism and nutrition. The goal of this project was to create a highly interactive, usable app that could be used as a mobile learning tool, and to study its use and pedagogical impact.
-\end{enumerate}
+\paragraph{Google Classroom}\cite{Classroom}  
+Google Classroom streamlines assignment distribution, grading, and resource sharing within educational institutions.  It integrates seamlessly with Google Meet for video sessions and Google Drive for file storage.  While strong on assignment workflows, Classroom is not designed for open‐ended study groups or peer-to-peer chat outside of formal class rosters, and offers limited flexibility in customizing collaborative spaces.
 
-\section{Gaps in Current Solution}
+\paragraph{Microsoft Teams}\cite{Teams}  
+Microsoft Teams unifies chat, file sharing, and video conferencing under the Office 365 umbrella.  Its “Teams” and “Channels” structure supports both class-level and small group discussions, and includes a built-in calendar.  Despite its power, the learning curve and enterprise focus of Teams can overwhelm students, and it provides few features tailored specifically to student-driven study sessions.
 
-Scientific articles can be found in different online database:
-\begin{enumerate}
-    \item bubu
-\end{enumerate}
+\paragraph{NutriBiochem Mobile Application}\cite{NutriBiochem}  
+The NutriBiochem app was crafted for undergraduate biochemistry and nutrition courses, offering interactive content and quizzes.  Its design demonstrates how a domain-specific tool can deeply engage learners in a particular subject area.  However, its tightly focused scope limits reuse across varied disciplines, and it omits real-time communication or scheduling capabilities common to collaborative study.
+
+\section{Gaps in Current Solutions}
+
+Although these platforms excel at discrete tasks—chat (Slack, Teams), course management (Google Classroom), or subject-focused learning (NutriBiochem)—several gaps remain:
+
+First, none provide a unified, student-driven environment that seamlessly combines file management, ad hoc group chat, and on-demand study‐session scheduling. Students often juggle multiple services (e.g.\ Slack for chat, Google Drive for documents, Calendly for scheduling), which introduces friction and context-switching overhead.
+
+Second, current tools emphasize instructor-led workflows or corporate use cases; they lack features like flexible “study rooms,” lightweight event RSVPs, and peer-to-peer resource tagging that empower students to take ownership of their collaborative learning.
+
+Finally, integration with external calendars and real-time video is either missing or bolted on as a generic add-on, rather than designed around the rhythm of student study sessions and group learning.
 
 \section{Proposed Solution}
 
-For each read paper try to note information, so you can use later:
-% \begin{itemize}
-%     \item resource author;
-%     \item resource name (article title, book title, ...);
-%     \item subject: what is the paper aim;
-%     \item addressed problem ; 
-%     \item methods/methodology used to solve the problem;
-%     \item used algorithms;
-%     \item test data (e.g. benchmarks, real cases).
-% \end{itemize}
+In response to the limitations of existing tools, I have developed a web application focused on two core capabilities: file sharing and real-time chat.  By combining these into a single, student-centric platform, the goal is to reduce the fragmentation and context-switching that students experience when juggling separate services.
 
-% For a git resource or an existing application:
-% \begin{itemize}
-%     \item URL;
-%     \item application features;
-%     \item used technologies.
-% \end{itemize}
+\begin{itemize}
+  \item \textbf{File Upload \& Repository:}  
+    Users can upload lecture notes, articles, and other learning materials directly into organized collections.  Each file is stored securely, versioned, and can be tagged or searched by course, topic, or keyword.  Peers in the same study group can browse and download shared resources without leaving the application.
+  
+  \item \textbf{Real-Time Chat Groups:}  
+    Ad-hoc chat rooms allow students to form topic-specific discussion channels on the fly.  Messages are delivered instantly, with “seen” indicators and simple reaction support.  The chat interface is designed for quick group Q\&A, file previewing, and link sharing, all within the same context as the file repository.
+\end{itemize}
+
+The architecture is deliberately modular—each feature lives in its own microservice—so that future additions (for example, scheduling study sessions or integrating with external calendars) can be slotted in with minimal disruption.  
