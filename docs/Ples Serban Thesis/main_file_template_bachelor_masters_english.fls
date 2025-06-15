@@ -187,6 +187,7 @@ INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/cm/cmsl12.tfm
 INPUT ./main_file_template_bachelor_masters_english.toc
 INPUT ./main_file_template_bachelor_masters_english.toc
 INPUT main_file_template_bachelor_masters_english.toc
@@ -219,7 +220,6 @@ INPUT ./chapterss/cap1.tex
 INPUT ./chapterss/cap1.tex
 INPUT ./chapterss/cap1.tex
 INPUT chapterss/cap1.tex
-INPUT /opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/tfm/public/cm/cmsl12.tfm
 INPUT ./chapterss/cap2.tex
 INPUT ./chapterss/cap2.tex
 INPUT ./chapterss/cap2.tex
