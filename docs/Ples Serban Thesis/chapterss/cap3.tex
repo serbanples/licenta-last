@@ -3,17 +3,17 @@
 
 \section{Architecture}
 
-The application uses a combination of Event Driven architecture and Request-Response architecture, making as much use as possible of Node JS's built in capabilities for handling multiple operations on a single thread using concurrency and asynchronous programming.
+The application uses a combination of Event Driven architecture and Request-Response architecture, making as much use as possible of Node JS's\cite{NODEJS} built in capabilities for handling multiple operations on a single thread using concurrency and asynchronous programming.
 
-The application consists of multiple microservices. These microservices implement communication patterns like \textit{Request-Response} and \textit{Publish/Subscribe}. All microservice communication is done using message queues like RabbitMQ and BullMQ. While RabbitMQ offers great support for both Request-Response communication and Publish/Subscribe communication, I chose to use BullMQ for Publish/Subscribe. BullMQ uses Redis to queue messages and process them. By using Redis, BullMQ offers an easy way to schedule the times when a message is executed and implement retry policies. On the other hand, RabbitMQ is built upon AMQP (Advanced Message Queuing Protocol). This makes it possbile to pass messsages across an internal network and register handlers for these messages. 
+The application consists of multiple microservices. These microservices implement communication patterns like \textit{Request-Response} and \textit{Publish/Subscribe}. All microservice communication is done using message queues like RabbitMQ\cite{RABBIT} and BullMQ\cite{BULL}. While RabbitMQ offers great support for both Request-Response communication and Publish/Subscribe communication, I chose to use BullMQ for Publish/Subscribe. BullMQ uses Redis to queue messages and process them. By using Redis, BullMQ offers an easy way to schedule the times when a message is executed and implement retry policies. On the other hand, RabbitMQ is built upon AMQP (Advanced Message Queuing Protocol)\cite{AMQP}. This makes it possbile to pass messsages across an internal network and register handlers for these messages. 
 
 Since this application is heavily focused on microservices, here is a short description for each one of them:
 \begin{itemize}
     % \item Client - User interface, hosted on a server of its own.
-    \item \textbf{Webserver Service} - Single HTTP server, tasked with serving the client application and providing HTTP routes for fetching data.
+    \item \textbf{Webserver Service} - Single HTTP\cite{HTTP} server, tasked with serving the client application and providing HTTP routes for fetching data.
     \item \textbf{Authentication Service} - Service handling all authentication logic. This server is only accessible via RabbitMQ queues.
     \item \textbf{Core Service} - Service handling all reads and writes to the database. This server is accessbile via RabbitMQ queues.
-    \item \textbf{Authorization Service} - Service handling authorization across the whole application. The application implements a RBAC (Role Based Access Control). Each request goes through this service before reaching the Core service. Only accessbile via RabbitMQ.
+    \item \textbf{Authorization Service} - Service handling authorization across the whole application. The application implements a RBAC (Role Based Access Control)\cite{RBAC}. Each request goes through this service before reaching the Core service. Only accessbile via RabbitMQ.
     \item \textbf{Uploader Service} - Service handling all file uploads. Since uploads are usually resource intensive tasks and can fail due to numerous reasons, this is a processor service using BullMQ.
     \item \textbf{Mail Service} - Service handling all emails sent. Sending emails is also a resource intensive task especially if sending to multiple users at the same tim. This is a processor service using BullMQ.
     \item \textbf{Websocket Server} - Server exposing only a websocket connection. This server is handling all of the chat features inside of the application, listening for notifications sent by clients, invoking the Core service for different writes (saves, updates) to the database, and dispatching a notification to the intended client.
@@ -24,7 +24,7 @@ Since this application is heavily focused on microservices, here is a short desc
 The main features of the application are: a steady authentication, a live-chat for allowing students to study in groups and a file-sharing system for easily sharing study notes.
 
 \subsection{Authentication}
-The most important part of any web based application is the authentication. While developing the authentication system for my application, I followed OAuth2 standards. 
+The most important part of any web based application is the authentication. While developing the authentication system for my application, I followed OAuth2\cite{OAUTH2} standards. 
 
 \textbf{Registration}: During registration, users submit their full name, email, password and a confirmation password. The system hashes the password with a strong algorithm (implemented using bcryptjs), creates a new user record marked as unverified, and generates a time-limited email verification token. The token is stored in the database and emailed, prompting users to confirm their address.
 
@@ -32,7 +32,7 @@ Endpoint: /auth/register
 
 Method: POST
 
-Request Body: JSON Object containing fullname, email, password and confirmation password.
+Request Body: JSON\cite{JSON} Object containing fullname, email, password and confirmation password.
 
 Response: JSON Object containing a success message if the request was successful
 
@@ -54,7 +54,7 @@ Query Parameters: verificationToken (string) -> verification token for certain a
 Response: JSON Object containing a success message if the request was successful
 
 
-\textbf{Login}: On login, users submit credentials, which the system verifies against stored hashes. After confirming the account is verified, it generates a cryptographically secure session code, encrypts it, and stores it in the database under the user profile. The code is set in an HttpOnly, Secure cookie, establishing the authenticated session.
+\textbf{Login}: On login, users submit credentials, which the system verifies against stored hashes. After confirming the account is verified, it generates a cryptographically secure session code, encrypts it, and stores it in the database under the user profile. The code is set in an HttpOnly, Secure cookie\cite{COOKIES}, establishing the authenticated session.
 
 Endpoint: /auth/login
 
@@ -101,7 +101,7 @@ Response: JSON Object containing userId, role and email of the logged in user if
 \subsection{Live-chat}
 The main part of any peer to peer platform is a real-time chat. Since this application focuses on providing students a way to communicate with each other in order to make stuying togheter easier, a real-time chat is a core functionality that I had to implement.
 
-The real-time chat is implemented using Web Sockets. Even though Web Sockets are usually used for machine to machine communication, most applications that include a real-time chat like Microsoft Teams, Discord, Whatsapp use Web Sockets under to hood.
+The real-time chat is implemented using Web Sockets\cite{WEB_SOCKET}. Even though Web Sockets are usually used for machine to machine communication, most applications that include a real-time chat like Microsoft Teams, Discord, Whatsapp use Web Sockets under to hood.
 
 Web Sockets work by creating a bidirectional communication channel between clients and servers. Data is transported on this channel using messages. Each message must have a defined 'name' and maybe have some content.
 
