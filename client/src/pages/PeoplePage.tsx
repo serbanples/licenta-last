@@ -1,18 +1,18 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLoading, useSearch, useToast } from '@/hooks';
-import { browse, cancelAddFriend, removeFriend, requestAddFriend, suggest } from '@/services/users';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useAuth, useLoading, useSearch, useToast } from '@/hooks';
+import { browse, suggest, getConversationId as getConv } from '@/services/users';
 import { useEffect } from 'react';
 import { ApiResponse } from '@/data-types/general';
 import { User } from '@/services/types';
 import Browser from '@/components/custom/browser-v2/browser';
 import { UserCard } from '@/components/custom/browser-v2/userCard';
 import { getUserCardActions } from './statics';
-import { Minus, Plus, Send, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
 import { routes } from '@/router/routeConfig';
+import { Send } from 'lucide-react';
 
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 20;
 
 export const PeoplePage: React.FC = () => {
   const { suggestTerm, setSuggestions, searchTerm } = useSearch();
@@ -20,25 +20,19 @@ export const PeoplePage: React.FC = () => {
   const { setLoading } = useLoading();
   const nav = useNavigate();
   const { reset } = useBreadcrumbs();
-  const qc = useQueryClient();
+  const user = useAuth().getUser()?.user;
 
-  const userCardActions = getUserCardActions(Send, Plus, Minus, X);
+  const userCardActions = getUserCardActions(Send);
 
-  const actionHandler = (actionId: string, userId: string) => {
+  const actionHandler = async (actionId: string, userId: string) => {
+    console.log(actionId)
     switch (actionId) {
       case 'item-view':
         nav(routes.person.replace(':id', userId));
         break
       case 'startConversation':
-        break;
-      case 'addFriend':
-        requestAddFriendMutation.mutate(userId);
-        break;
-      case 'removeFriend':
-        removeFriendMutation.mutate(userId);
-        break;
-      case 'cancelFriendRequest':
-        cancelAddFriendMutation.mutate(userId);
+        const conversation = await getConversationId(userId);
+        nav(routes.chat + '?chat=' + conversation.id);
         break;
     }
   }
@@ -48,36 +42,6 @@ export const PeoplePage: React.FC = () => {
     queryKey: ['people-suggest', suggestTerm],
     queryFn: () => suggest({ text: suggestTerm }),
     enabled: !!suggestTerm,
-  })
-
-  const requestAddFriendMutation = useMutation({
-    mutationFn: (friendId: string) => requestAddFriend(friendId),
-    onError: () => {
-      toast.error('There was an error adding a friend');
-    },
-    onSuccess: async () => {
-      qc.invalidateQueries({ queryKey: ['people-browse'] });
-    },
-  })
-
-  const cancelAddFriendMutation = useMutation({
-    mutationFn: (friendId: string) => cancelAddFriend(friendId),
-    onError: () => {
-      toast.error('There was an error cancelling the friend request');
-    },
-    onSuccess: async () => {
-      qc.invalidateQueries({ queryKey: ['people-browse'] });
-    },
-  })
-
-  const removeFriendMutation = useMutation({
-    mutationFn: (friendId: string) => removeFriend(friendId),
-    onError: () => {
-      toast.error('There was an error removing this friend');
-    },
-    onSuccess: async () => {
-      qc.invalidateQueries({ queryKey: ['people-browse'] });
-    },
   })
 
   // browse users
@@ -93,6 +57,10 @@ export const PeoplePage: React.FC = () => {
       return undefined;
     },
   })
+
+  const getConversationId = (userId: string) => {
+    return getConv([userId, user?.id!]);
+  }
 
   // set crumbs on page render
   useEffect(() => {

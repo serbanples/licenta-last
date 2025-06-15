@@ -1,14 +1,16 @@
 import { useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { Home, MessageSquare, FolderIcon, Users } from "lucide-react"
+import { MessageSquare, FolderIcon, Users } from "lucide-react"
 import { useSearch } from "@/hooks/useSearch"
 import { SearchBar } from "./searchbar"
 import { AccountDropdown } from "../custom/account-dropdown"
 import { Tabs, TabsList, TabsTrigger } from "./animated-tabs"
 import { NotificationDropdown } from "../custom/notification"
+import { CircularProgress } from "../custom/circular-progress"
+import { useUploader } from "@/lib/uploader"
 
 const routes = [
-  { path: "/", label: "Home", icon: Home },
+  // { path: "/", label: "Home", icon: Home },
   { path: "/chat", label: "Chat", icon: MessageSquare },
   { path: "/files", label: "Files", icon: FolderIcon },
   { path: "/people", label: "People", icon: Users },
@@ -20,6 +22,8 @@ export function Topbar() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { clearSearch } = useSearch()
+
+  const uploadProgress = useUploader();
 
   useEffect(() => {
     clearSearch()
@@ -61,6 +65,11 @@ export function Topbar() {
           {/* <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
           </Button> */}
+          {uploadProgress > 0 && uploadProgress < 100 && (
+            <div className="w-10 h-10">
+              <CircularProgress percent={uploadProgress} strokeWidth={3} size={40} />
+            </div>
+          )}
           <NotificationDropdown />
           <AccountDropdown />
         </div>

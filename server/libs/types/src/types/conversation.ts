@@ -3,6 +3,7 @@ import { with_pagination, with_populate, with_text } from "./db";
 
 export interface ConversationBrowseFilter extends with_pagination, with_text, with_populate {
     _id?: string;
+    participants?: string[]
 }
 
 export interface ConversationCreateType {

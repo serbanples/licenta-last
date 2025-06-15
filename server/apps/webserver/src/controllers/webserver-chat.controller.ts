@@ -3,7 +3,7 @@ import { ConversationType, MessageType, UserType } from "@app/dbacc";
 import { UserContext } from "@app/shared";
 import { ConversationAddUser, ConversationBrowseFilter, ConversationCreateType, ConversationDeleteFilter, ConversationUpdateType, MessageBrowseFilter, ResourceWithPagination, UserContextType } from "@app/types";
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Query, Req, UseGuards } from "@nestjs/common";
-import { Observable, tap } from "rxjs";
+import { map, Observable, tap } from "rxjs";
 
 @Controller('chat')
 export class WebserverChatController {
@@ -45,5 +45,27 @@ export class WebserverChatController {
     @HttpCode(HttpStatus.OK)
     browseMessages(@UserContext() user: UserContextType, @Body() data: MessageBrowseFilter) {
         return this.coreProxy.browseMessage({ userContext: user, data: data });
+    }
+
+    @Post('conversations/findOrCreate')
+    @HttpCode(HttpStatus.OK)
+    findOrCreateConversation(@UserContext() user: UserContextType, @Body() data: { participants: string[] }) {
+        return this.coreProxy.browseConversations({ userContext: user, data: data }).pipe(
+            map((conversations) => {
+                if (!conversations) {
+                    throw new Error('Conversation not found or could not be created');
+                }
+                const conversation = conversations.result.find((c) => c.participants.length === 2);
+                console.log(conversation)
+                if(conversation) {
+                    return { id: conversation.id }
+                }
+                return this.coreProxy.createConversation({ userContext: user, data: { participants: data.participants } }).pipe(
+                    map((createdConversation) => {
+                        return { id: createdConversation.id };
+                    })
+                );
+            })
+        );
     }
 }

@@ -1,3 +1,5 @@
+import { SmallUserType } from "@/data-types/general"
+
 export type LoginFormType = {
   email: string,
   password: string
@@ -33,7 +35,7 @@ export type User = {
   fullName: string,
   email: string,
   description?: string,
-  photoUrl?: string,
+  profilePictureUrl?: string,
   role: UserRoleEnum,
   friends: User[],
   friendRequests: FriendRequestType[],
@@ -51,4 +53,17 @@ export type Pagination = {
   pageSize?: number,
   orderBy?: string,
   orderDir?: 'asc' | 'desc',
+}
+
+export type FileType = {
+  id: string,
+  name: string,
+  description?: string,
+  size: number,
+  type: string,
+  fileURL: string,
+  createdAt: Date,
+  updatedAt: Date,
+  uploadedBy: SmallUserType, 
+  mimeType: string
 }

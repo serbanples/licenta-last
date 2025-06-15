@@ -23,7 +23,7 @@ interface UserCardProps {
 }
 
 export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler }) => {
-  const { id, fullName, email, description, photoUrl } = user;
+  const { id, fullName, email, description, profilePictureUrl } = user;
   const { getUser } = useAuth();
   const loggedInUserId = getUser()?.user?.id;
 
@@ -85,9 +85,9 @@ export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler
 
       {/* Profile photo */}
       <div className='cursor-pointer hover:shadow-md rounded-lg p-6 flex flex-col h-full w-full' onClick={handleCardClick}>
-        {photoUrl && (
+        {profilePictureUrl && (
           <img
-            src={photoUrl}
+            src={profilePictureUrl}
             alt={fullName}
             className="w-full h-32 object-cover rounded-md mb-4"
             onClick={e => e.stopPropagation()}

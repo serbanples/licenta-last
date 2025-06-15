@@ -44,3 +44,7 @@ export const cancelAddFriend = async (friendId: string) => {
 export const removeFriend = async (friendId: string) => {
   return POST(USER_REMOVE_FRIEND_URL, { friendId });
 }
+
+export const getConversationId = (participants: string[]) => {
+  return POST('/chat/conversations/findOrCreate', { participants })
+}

@@ -19,7 +19,7 @@ export class UserService {
             formattedFilter = { ...filter, _id: { '$nin': [usercontext.id] } }
         }
 
-        return this.userModel.findWithPagination(pagination, filter, filter.populate)
+        return this.userModel.findWithPagination(pagination, formattedFilter, true)
     }
 
     create(newDocument: UserCreateType): Promise<UserType> {

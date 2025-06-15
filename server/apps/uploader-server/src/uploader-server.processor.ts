@@ -12,6 +12,7 @@ import { CoreProxyService } from "@app/clients/coreProxy.service";
 import { UserContextType, WithContext } from "@app/types";
 import { FileCreateType } from "@app/types/types/files";
 import { firstValueFrom } from "rxjs";
+import { NotificationProxyService } from "@app/clients/notificationProxy.service";
 
 @Processor(UPLOADER_SERVER_QUEUE)
 @Injectable()
@@ -21,7 +22,8 @@ export class UploaderServerProcessor extends WorkerHost {
         private readonly documentUploader: DocumentUploaderService,
         private readonly profilePhotoUploader: ProfilePhotoUploaderService,
         private readonly logger: LoggerService,
-        private readonly coreProxy: CoreProxyService
+        private readonly coreProxy: CoreProxyService,
+        private readonly sseProxy: NotificationProxyService,
     ) { super() }
 
     async process(job: Job<FileUploadJobData>): Promise<void> {
@@ -33,14 +35,13 @@ export class UploaderServerProcessor extends WorkerHost {
         this.logger.log('Starting process for job', { jobid: job.id, data: job.data });
 
         // const interval = setInterval(() => {
-        //     job.updateProgress(progress + 10)
-        // }, 20);
+        //     job.updateProgress()
+        // }, 100);
 
         return this.getUploaderByFileType(fileType).upload(file, meta)
             .then(async (documentUrl) => {
                 job.updateProgress(70);
                 // clearInterval(interval);
-                console.log(meta)
                 const fileId = await this.createFileMetadata(job.data.userContext, fileType, file, documentUrl, meta!);
                 job.updateProgress(80)
                 await this.addFileToUser(job.data.userContext, fileId);
@@ -65,24 +66,24 @@ export class UploaderServerProcessor extends WorkerHost {
     @OnWorkerEvent('progress')
     onWorkerProgress(job: Job<FileUploadJobData>) {
         this.logger.log('Upload progress increased', { jobid: job.id, data: job.data, progress: job.progress })
-        this.notify({ status: 'uploading', progress: job.progress });
+        this.notify({ status: 'uploading', progress: job.progress }, job.data.userContext.id);
     }
 
     @OnWorkerEvent('completed')
     onCompleted(job: Job<FileUploadJobData>) {
         this.logger.log('Job completed', { jobId: job.id });
-        this.notify({ status: 'success' })
+        this.notify({ status: 'success' }, job.data.userContext.id)
     }
 
     // Event listener: called when a job has failed (after retries if configured)
     @OnWorkerEvent('failed')
     onFailed(job: Job<FileUploadJobData>, error: Error) {
         this.logger.error('Job failed', { jobId: job.id }, error.stack);
-        this.notify({ status: 'failed' })
+        this.notify({ status: 'failed' }, job.data.userContext.id)
     }
 
-    private notify(notification: { status: 'uploading' | 'failed' | 'success', progress?: any }) {
-        // call sse with updates
+    private notify(notification: { status: 'uploading' | 'failed' | 'success', progress?: any }, userid: string) {
+        this.sseProxy.sendUploaderEvent(userid, notification);
     }
 
     private async createFileMetadata(usercontext: UserContextType, fileType: FileTypeEnum, file: Express.Multer.File, url: string, metadata: {name: string, description: string}): Promise<string> {

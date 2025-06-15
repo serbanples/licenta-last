@@ -12,6 +12,7 @@ import { FilesPage } from "@/pages/FilesPage";
 import { PeoplePage } from "@/pages/PeoplePage";
 import { VerifyAccountPage } from "@/pages/VerifyAccountPage";
 import { PersonPage } from "@/pages/PersonPage";
+import { FilePage } from "@/pages/FilePage";
 
 export const AppRouter: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ export const AppRouter: React.FC = () => {
         <Route path={routes.files} element={<FilesPage />} />
         <Route path={routes.people} element={<PeoplePage />} />
         <Route path={routes.person} element={<PersonPage /> } />
+        <Route path={routes.file} element={<FilePage /> } />
       </Route>
     </Routes>
   )

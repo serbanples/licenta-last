@@ -1,5 +1,5 @@
 import { FileModel, FileType } from "@app/dbacc";
-import { UserContextType } from "@app/types";
+import { FileTypeEnum, UserContextType } from "@app/types";
 import { FileBrowseFilter, FileCreateType, FileDeleteFilter, FileUpdateType } from "@app/types/types/files";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import * as _ from "lodash";
@@ -10,7 +10,8 @@ export class FileService {
 
     browse(user: UserContextType, filter: FileBrowseFilter) {
         const pagination = filter.pagination || {};
-        return this.fileModel.findWithPagination(pagination, filter, true);
+        const formattedFilter = { ...filter, fileType: { '$nin': [FileTypeEnum.PROFILE] }}
+        return this.fileModel.findWithPagination(pagination, formattedFilter, true);
     }
 
     create(user: UserContextType, body: FileCreateType) {

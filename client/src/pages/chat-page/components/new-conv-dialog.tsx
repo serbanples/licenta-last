@@ -71,7 +71,7 @@ export const NewConversationDialog = () => {
                                             }}
                                         >
                                             <Avatar className="mr-2">
-                                                <AvatarImage src={user.photoUrl} alt={user.fullName} />
+                                                <AvatarImage src={user.profilePictureUrl} alt={user.fullName} />
                                                 <AvatarFallback>{user.fullName[0]}</AvatarFallback>
                                             </Avatar>
                                             {user.fullName}

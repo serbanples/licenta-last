@@ -4,11 +4,12 @@ import { UserViewEdit } from "@/components/custom/user-view-edit";
 import { ApiResponse } from "@/data-types/general";
 import { useAuth, useLoading, useToast } from "@/hooks";
 import { useBreadcrumbs } from "@/hooks/useBreadcrumbs";
-import { Pagination, User } from "@/services/types";
-import { browseFriends, findById, update } from "@/services/users";
+import { browse, deleteFile, uploadProfilePhoto } from "@/services/file";
+import { FileType, User } from "@/services/types";
+import { findById, update } from "@/services/users";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -23,17 +24,52 @@ export const PersonPage: React.FC = () => {
   const queryClient = useQueryClient();
   const [version, setVersion] = useState(0);
 
+  const nav = useNavigate();
+
   // get user data
   const { data: user, error } = useQuery({
     queryKey: ['person-find', id],
-    queryFn: () => { setLoading(true); return findById(id!) },
+    queryFn: () => { setLoading(true); return findById(id!).then((user) => { setLoading(false); return user }) },
     enabled: !!id,
     retry: false,
   })
 
-  const { data: friends, fetchNextPage, hasNextPage, error: friendsError } = useInfiniteQuery<ApiResponse<User>, Error>({
-    queryKey: ['friends-browse', isEditable],
-    queryFn: ({ pageParam }) => browseFriends(pageParam as Pagination, !isEditable ? 'common' : 'mine', !isEditable ? user?.id : undefined),
+  const handleFileAction = (actionId: string, file: FileType) => {
+    switch (actionId) {
+      case 'item-view':
+        nav(`/files/${file.id}`); // Navigate to file page
+        break;
+      case 'download':
+        window.location.href = file.fileURL; // Trigger download by setting href
+        break;
+      case 'delete':
+        // Handle delete action
+        handleDelete(file.id);
+        break;
+    }
+  }
+
+  const handleDelete = (fileId: string) => {
+    deleteFile(fileId).then(() => { queryClient.invalidateQueries({ queryKey: ['files-browse', isEditable] }), toast.success('File deleted successfully') });
+  }
+
+  // const { data: files, fetchNextPage, hasNextPage, error: friendsError } = useInfiniteQuery<ApiResponse<User>, Error>({
+  //   queryKey: ['files-browse', isEditable],
+  //   queryFn: ({ pageParam }) => browseFriends(pageParam as Pagination, !isEditable ? 'common' : 'mine', !isEditable ? user?.id : undefined),
+  //   enabled: !!user && isEditable !== undefined,
+  //   retry: false,
+  //   initialPageParam: { fromItem: 0, pageSize: DEFAULT_PAGE_SIZE, orderBy: 'name', orderDir: 'asc' },
+  //   getNextPageParam: (lastPage) => {
+  //     if (lastPage.count + lastPage.pageSize < lastPage.total) {
+  //       return { fromItem: lastPage.count, pageSize: DEFAULT_PAGE_SIZE, orderBy: 'name', orderDir: 'asc' };
+  //     }
+  //     return undefined;
+  //   },
+  // })
+
+  const { data: files, fetchNextPage, hasNextPage, error: filesError } = useInfiniteQuery<ApiResponse<FileType>, Error>({
+    queryKey: ['files-browse', isEditable],
+    queryFn: ({ pageParam }) => browse({ pagination: pageParam, uploadedBy: user?.id }),
     enabled: !!user && isEditable !== undefined,
     retry: false,
     initialPageParam: { fromItem: 0, pageSize: DEFAULT_PAGE_SIZE, orderBy: 'name', orderDir: 'asc' },
@@ -60,6 +96,10 @@ export const PersonPage: React.FC = () => {
     },
   });
 
+  const handleUpload = (file: File, metadata: { name: string, description: string }) => {
+    return uploadProfilePhoto(file, metadata).then(() => queryClient.invalidateQueries({ queryKey: ['person-find', id] }))
+  }
+
   useEffect(() => {
     setLoading(false);
     if (!user) {
@@ -78,7 +118,7 @@ export const PersonPage: React.FC = () => {
     }
   }, [user])
 
-  useEffect(() => setLoading(false), [error, friendsError])
+  useEffect(() => setLoading(false), [error, filesError])
 
   useEffect(() => setLoading(true), [id]);
 
@@ -99,13 +139,15 @@ export const PersonPage: React.FC = () => {
             user={user!}
             isEditable={isEditable}
             isLoading={isLoading}
-            friendsData={{
-              friends: friends?.pages?.flatMap(page => page.result) || [],
+            filesData={{
+              files: files?.pages?.flatMap(page => page.result) || [],
               hasMore: hasNextPage,
               fetchMore: fetchNextPage,
-              error: friendsError
+              error: filesError
             }}
             onSave={handleSave}
+            onFileAction={handleFileAction}
+            onAvatarUpload={handleUpload}
           />
       }
     </>

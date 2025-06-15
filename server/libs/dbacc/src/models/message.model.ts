@@ -9,7 +9,7 @@ import { UtilsService } from "../utils/utils.service";
 export class MessageModel extends AbstractModel<MessageType> {
   protected override textSearchFields: string[] = ['content'];
   protected override populateOptions: PopulateOpts = [{
-    path: 'createdBy', model: ModelNameEnum.USER, select: 'email fullName'
+    path: 'createdBy', model: ModelNameEnum.USER, select: 'email fullName profilePictureUrl'
   }, {
     path: 'seenBy', model: ModelNameEnum.USER, select: 'email fullName'
   }];

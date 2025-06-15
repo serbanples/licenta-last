@@ -7,5 +7,6 @@ export const routes = {
   chat: '/chat',
   files: '/files',
   people: '/people',
-  person: '/people/:id'
+  person: '/people/:id',
+  file: '/files/:id',
 }

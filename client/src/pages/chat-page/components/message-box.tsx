@@ -15,7 +15,7 @@ export function MessageBox({ message }: MessageBoxProps) {
     >
       {/* Avatar */}
       <Avatar>
-        <AvatarImage src={message?.createdBy?.photoUrl} alt={message?.createdBy?.fullName} />
+        <AvatarImage src={message?.createdBy?.profilePictureUrl} alt={message?.createdBy?.fullName} />
         <AvatarFallback>{message?.createdBy?.fullName?.charAt(0)}</AvatarFallback>
       </Avatar>
 

@@ -11,11 +11,11 @@ export interface ApiResponse<T> {
   result: T[];
 }
 
-interface SmallUserType {
+export interface SmallUserType {
   email: string,
   fullName: string,
   id: string,
-  photoUrl: string,
+  profilePictureUrl: string,
 }
 export interface ConversationType {
   participants: SmallUserType[],
