@@ -10,5 +10,6 @@ export enum FileTypeEnum {
 export interface FileUploadJobData {
     file: Express.Multer.File,
     fileType: FileTypeEnum,
+    metadata: { name: string, description: string}
     userContext: UserContextType,
 }

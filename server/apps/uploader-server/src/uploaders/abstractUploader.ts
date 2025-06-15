@@ -24,9 +24,12 @@ export abstract class AbstactUploader {
         );
     }
 
-    upload(file: Express.Multer.File) {
-        const filename = `${randomUUID().toString()}-${file.originalname}`;
-        return this.minioService.putObject(this.bucketName, filename, file.buffer, file.size)
+    upload(file: Express.Multer.File, metadata: { name: string, description: string }) {
+        console.log(metadata)
+        const buffer = Buffer.from(file.buffer)
+        const filename = `${randomUUID().toString()}-${metadata.name}`;
+        return this.minioService.putObject(this.bucketName, filename, buffer, file.size)
+            .then((data) => this.getPresignedUrl(filename));
         // .then(() => this.coreClient.updateUserProfilePhoto(filename))
     }
 
@@ -39,5 +42,7 @@ export abstract class AbstactUploader {
             this.logger.log(`Default bucket "${this.bucketName}" exists`);
         }
     }
+
+    // abstract afterCreate();
 
 }

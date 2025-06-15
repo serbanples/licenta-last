@@ -9,6 +9,7 @@ import { join } from 'path';
 import { WebserverUserController } from './controllers/webserver-user.controller';
 import { WebserverNotifController } from './controllers/webserver-notif.controler';
 import { WebserverChatController } from './controllers/webserver-chat.controller';
+import { WebserverFileController } from './controllers/webserver-file.controller';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { WebserverChatController } from './controllers/webserver-chat.controller
       exclude: ['/api*'],
     }),
   ],
-  controllers: [WebserverAuthController, WebserverUserController, WebserverNotifController, WebserverChatController],
+  controllers: [WebserverAuthController, WebserverUserController, WebserverNotifController, WebserverChatController, WebserverFileController],
 })
 export class WebserverModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

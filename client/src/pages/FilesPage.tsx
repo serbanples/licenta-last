@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import FileUploadDialog from "./file-page/file-uploader-dialog";
 import { routes } from "@/router/routeConfig";
 import { useBreadcrumbs } from "@/hooks/useBreadcrumbs";
+import { uploadFile } from "@/services/file";
 
 // const DEFAULT_PAGE_SIZE = 10;
 
@@ -98,6 +99,10 @@ export const FilesPage: React.FC = () => {
     reset([{ id: 'files', label: 'Files', linkTo: routes.files }]);
   }, [])
 
+  const handleUpload = (file: File, metadata: { name: string, description: string}) => {
+    return uploadFile(file, metadata);
+  }
+
   // // update toast on error
   // useEffect(() => {
   //   if (error) {
@@ -126,7 +131,7 @@ export const FilesPage: React.FC = () => {
         renderItem={(user) => <FileCard user={user} actions={[]} actionHandler={actionHandler} />}
         columns={3}
       /> */}
-      <FileUploadDialog />
+      <FileUploadDialog onUpload={handleUpload} />
     </div>
   );
 }

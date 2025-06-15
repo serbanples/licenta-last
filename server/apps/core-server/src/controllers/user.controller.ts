@@ -5,7 +5,7 @@ import { MessagePattern } from "@nestjs/microservices";
 import { UserService } from "../modules/user.service";
 import { UserBrowseFilter, UserCreateType, UserDeleteType, UserUpdateType } from "@app/types/types/user";
 import { UserType } from "@app/dbacc";
-import { userBrowse, userCreate, userDelete, userFindById, userSuggest, userUpdate } from "@app/clients";
+import { userAddFile, userBrowse, userCreate, userDelete, userFindById, userSuggest, userUpdate } from "@app/clients";
 
 @UseInterceptors(LoggerInterceptor)
 @Controller()
@@ -48,6 +48,13 @@ export class UserController {
     @RpcErrorEncoder()
     suggest(@PayloadUserContext() userContext: UserContextType, @PayloadData() filter: UserBrowseFilter): Promise<string[]> {
         return this.userService.suggest(userContext, filter);
+    }
+
+    @MessagePattern(userAddFile)
+    @Authorize('addFile', 'users')
+    @RpcErrorEncoder()
+    addFile(@PayloadUserContext() userContext: UserContextType, @PayloadData() fileId: string) {
+        return this.userService.addFileToUser(userContext, fileId);
     }
 
     //   @MessagePattern(config.rabbitMQ.core.messages.friendRequestRequest)

@@ -16,6 +16,7 @@ export const userCreate = 'core.users.create';
 export const userUpdate = 'core.users.update';
 export const userDelete = 'core.users.delete';
 export const userSuggest = 'core.users.suggest';
+export const userAddFile = 'core.users.addFile';
 
 export const notificationBrowse = 'core.notifications.browse';
 export const notificationUpdateSeen = 'core.notifications.updateSeen';
@@ -31,4 +32,9 @@ export const messageBrowse = 'core.messages.browse';
 export const messageCreate = 'core.messages.create';
 export const messageUpdate = 'core.messages.update';
 export const messageDelete = 'core.messages.delete';
+
+export const fileCreate = 'core.files.create';
+export const fileDelete = 'core.files.delete';
+export const fileUpdate = 'core.files.update';
+export const fileBrowse = 'core.files.browse';
 

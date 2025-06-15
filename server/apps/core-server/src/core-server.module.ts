@@ -11,6 +11,8 @@ import { NotificationService } from './modules/notification.service';
 import { ChatController } from './controllers/chat.controller';
 import { ConverastionService } from './modules/conversation.service';
 import { MessageService } from './modules/message.service';
+import { FileController } from './controllers/file.controller';
+import { FileService } from './modules/file.service';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { MessageService } from './modules/message.service';
     DatabaseModule,
     GuardModule
   ],
-  controllers: [UserController, NotificationController, ChatController],
-  providers: [UserService, NotificationService, ConverastionService, MessageService]
+  controllers: [UserController, NotificationController, ChatController, FileController],
+  providers: [UserService, NotificationService, ConverastionService, MessageService, FileService]
 })
 export class CoreServerModule {}

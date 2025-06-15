@@ -3,7 +3,8 @@ import { CORE_SERVER_NAME } from "./clients.constants";
 import { ClientProxy } from "@nestjs/microservices";
 import { ConversationAddUser, ConversationBrowseFilter, ConversationCreateType, ConversationDeleteFilter, ConversationUpdateType, MessageBrowseFilter, MessageCreateType, MessageDeleteFilter, MessageUpdateType, WithContext } from "@app/types";
 import { UserBrowseFilter, UserCreateType, UserDeleteType, UserUpdateType } from "@app/types/types/user";
-import { conversationAddUser, conversationBrowse, conversationCreate, conversationDelete, conversationFindByID, conversationUpdate, messageBrowse, messageCreate, messageDelete, messageUpdate, notificationBrowse, notificationUpdateSeen, userBrowse, userCreate, userFindById, userSuggest, userUpdate } from "./messages.constants";
+import { conversationAddUser, conversationBrowse, conversationCreate, conversationDelete, conversationFindByID, conversationUpdate, fileBrowse, fileCreate, fileDelete, fileUpdate, messageBrowse, messageCreate, messageDelete, messageUpdate, notificationBrowse, notificationUpdateSeen, userAddFile, userBrowse, userCreate, userFindById, userSuggest, userUpdate } from "./messages.constants";
+import { FileBrowseFilter, FileCreateType, FileDeleteFilter, FileUpdateType } from "@app/types/types/files";
 
 @Injectable()
 export class CoreProxyService {
@@ -79,5 +80,25 @@ export class CoreProxyService {
 
     deleteMessage(payload: WithContext<MessageDeleteFilter>) {
         return this.proxy.send(messageDelete, payload)
+    }
+
+    createFile(payload: WithContext<FileCreateType>) {
+        return this.proxy.send(fileCreate, payload);
+    }
+
+    updateFile(payload: WithContext<FileUpdateType>) {
+        return this.proxy.send(fileUpdate, payload);
+    }
+
+    deleteFile(payload: WithContext<FileDeleteFilter>) {
+        return this.proxy.send(fileDelete, payload);
+    }
+
+    browseFiles(payload: WithContext<FileBrowseFilter>) {
+        return this.proxy.send(fileBrowse, payload);
+    }
+
+    addFileToUser(payload: WithContext<string>) {
+        return this.proxy.send(userAddFile, payload)
     }
 }

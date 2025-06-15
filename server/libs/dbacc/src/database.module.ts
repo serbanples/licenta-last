@@ -4,8 +4,8 @@ import { AccountSchema, AccountType } from './schema/account.schema';
 import { AccountModel } from './models/account.model';
 import { UserSchema, UserType } from './schema/user.schema';
 import { UserModel } from './models/user.model';
-import { ConversationSchema, ConversationType, FriendRequestSchema, FriendRequestType, MessageSchema, MessageType, NotificationScheam, NotificationType } from './schema';
-import { ConversationModel, FriendRequestModel, MessageModel, NotificationModel } from './models';
+import { ConversationSchema, ConversationType, FileSchema, FileType, FriendRequestSchema, FriendRequestType, MessageSchema, MessageType, NotificationScheam, NotificationType } from './schema';
+import { ConversationModel, FileModel, FriendRequestModel, MessageModel, NotificationModel } from './models';
 import { ConfService } from '@app/conf';
 
 @Global()
@@ -24,9 +24,10 @@ import { ConfService } from '@app/conf';
       { name: MessageType.name, schema: MessageSchema },
       { name: FriendRequestType.name, schema: FriendRequestSchema },
       { name: NotificationType.name, schema: NotificationScheam },
+      { name: FileType.name, schema: FileSchema }
     ]),
   ],
-  providers: [AccountModel, UserModel, ConversationModel, MessageModel, FriendRequestModel, NotificationModel],
-  exports: [AccountModel, UserModel, ConversationModel, MessageModel, FriendRequestModel, NotificationModel],
+  providers: [AccountModel, UserModel, ConversationModel, MessageModel, FriendRequestModel, NotificationModel, FileModel],
+  exports: [AccountModel, UserModel, ConversationModel, MessageModel, FriendRequestModel, NotificationModel, FileModel],
 })
 export class DatabaseModule {}

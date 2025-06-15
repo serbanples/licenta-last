@@ -6,6 +6,7 @@ const defaultHeaders = {
 
 export const POST = async (route: string, body?: any) => {
   const url = DATASOURCE_URL + route;
+  console.log(body)
   return fetch(url, {
     method: "POST",
     headers: defaultHeaders,
@@ -20,6 +21,32 @@ export const POST = async (route: string, body?: any) => {
       })
   })
 };
+
+export const POST_UPLOAD = async (
+  url: string,
+  body: unknown,
+  opts: Omit<RequestInit,'body'|'method'> = {}
+) => {
+  const isForm = body instanceof FormData;
+  const headers: Record<string,string> = { ...(opts.headers as any) };
+
+  if (!isForm) {
+    headers['Content-Type'] = 'application/json';
+    body = JSON.stringify(body);
+  }
+  // if it is FormData, leave headers alone so the browser can
+  // automatically set multipart/form-data; boundary=…
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: body as BodyInit,
+    ...opts,
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
 
 export const GET = async (route: string) => {
   const url = DATASOURCE_URL + route;

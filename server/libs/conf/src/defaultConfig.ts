@@ -94,7 +94,7 @@ export const defaultConfig: AppConfig = {
         secretkey: 'minio_secret_key',
     },
     token: {
-        expiration: 5 * 60 * 1000,
+        expiration: 5 * 60 * 60 * 1000,
     },
     ws: {
         port: 3001

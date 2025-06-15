@@ -46,6 +46,12 @@ export class UserType extends BaseSchema {
 
   @Prop({ type: [mongoose.Types.ObjectId], default: [], ref: ModelNameEnum.USER })
   friendRequests!: string[];
+
+  @Prop({ type: String, default: '' })
+  profilePictureUrl!: string;
+
+  @Prop({ type: [mongoose.Types.ObjectId], default: [], ref: ModelNameEnum.FILE })
+  files!: string[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserType);

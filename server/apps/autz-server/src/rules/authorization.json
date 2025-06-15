@@ -6,7 +6,8 @@
             "browse": true,
             "suggest": true,
             "update": true,
-            "addFriend": true
+            "addFriend": true,
+            "addFile": true
         },
         "friendRequest": {
             "request": true,
@@ -34,6 +35,12 @@
         "message": {
             "browse": true,
             "create": true
+        },
+        "file": {
+            "create": true,
+            "browse": true,
+            "update": true,
+            "delete": true
         }
     },
     "admin": {
@@ -43,7 +50,8 @@
             "browse": true,
             "suggest": true,
             "update": true,
-            "addFriend": true
+            "addFriend": true,
+            "addFile": true
         },
         "friendRequest": {
             "request": true,
@@ -71,6 +79,12 @@
         "message": {
             "browse": true,
             "create": true
+        },
+        "file": {
+            "create": true,
+            "browse": true,
+            "update": true,
+            "delete": true
         }
     },
     "master": {
@@ -80,7 +94,8 @@
             "browse": true,
             "suggest": true,
             "update": true,
-            "addFriend": true
+            "addFriend": true,
+            "addFile": true
         },
         "friendRequest": {
             "request": true,
@@ -108,6 +123,12 @@
         "message": {
             "browse": true,
             "create": true
+        },
+        "file": {
+            "create": true,
+            "browse": true,
+            "update": true,
+            "delete": true
         }
     }
 }

@@ -4,3 +4,4 @@ export * from './conversation.schema';
 export * from './message.schema';
 export * from './friendRequest.schema';
 export * from './notifications.schema'
+export * from './file.schema';
