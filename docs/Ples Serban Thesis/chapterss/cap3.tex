@@ -5,15 +5,15 @@
 
 The application uses a combination of Event Driven architecture and Request-Response architecture, making as much use as possible of Node JS's\cite{NODEJS} built in capabilities for handling multiple operations on a single thread using concurrency and asynchronous programming.
 
-The application consists of multiple microservices. These microservices implement communication patterns like \textit{Request-Response} and \textit{Publish/Subscribe}. All microservice communication is done using message queues like RabbitMQ\cite{RABBIT} and BullMQ\cite{BULL}. While RabbitMQ offers great support for both Request-Response communication and Publish/Subscribe communication, I chose to use BullMQ for Publish/Subscribe. BullMQ uses Redis to queue messages and process them. By using Redis, BullMQ offers an easy way to schedule the times when a message is executed and implement retry policies. On the other hand, RabbitMQ is built upon AMQP (Advanced Message Queuing Protocol)\cite{AMQP}. This makes it possbile to pass messsages across an internal network and register handlers for these messages. 
+The application consists of multiple microservices. These microservices implement communication patterns like \textit{Request-Response} and \textit{Publish/Subscribe}. All microservice communication is done using message queues like RabbitMQ and BullMQ. While RabbitMQ offers great support for both Request-Response communication and Publish/Subscribe communication, I chose to use BullMQ for Publish/Subscribe. BullMQ uses Redis to queue messages and process them. By using Redis, BullMQ offers an easy way to schedule the times when a message is executed and implement retry policies. On the other hand, RabbitMQ is built upon AMQP (Advanced Message Queuing Protocol)\cite{AMQP}. This makes it possbile to pass messsages across an internal network and register handlers for these messages. 
 
 Since this application is heavily focused on microservices, here is a short description for each one of them:
 \begin{itemize}
     % \item Client - User interface, hosted on a server of its own.
-    \item \textbf{Webserver Service} - Single HTTP\cite{HTTP} server, tasked with serving the client application and providing HTTP routes for fetching data.
+    \item \textbf{Webserver Service} - Single HTTP server, tasked with serving the client application and providing HTTP routes for fetching data.
     \item \textbf{Authentication Service} - Service handling all authentication logic. This server is only accessible via RabbitMQ queues.
     \item \textbf{Core Service} - Service handling all reads and writes to the database. This server is accessbile via RabbitMQ queues.
-    \item \textbf{Authorization Service} - Service handling authorization across the whole application. The application implements a RBAC (Role Based Access Control)\cite{RBAC}. Each request goes through this service before reaching the Core service. Only accessbile via RabbitMQ.
+    \item \textbf{Authorization Service} - Service handling authorization across the whole application. The application implements a RBAC (Role Based Access Control). Each request goes through this service before reaching the Core service. Only accessbile via RabbitMQ.
     \item \textbf{Uploader Service} - Service handling all file uploads. Since uploads are usually resource intensive tasks and can fail due to numerous reasons, this is a processor service using BullMQ.
     \item \textbf{Mail Service} - Service handling all emails sent. Sending emails is also a resource intensive task especially if sending to multiple users at the same tim. This is a processor service using BullMQ.
     \item \textbf{Websocket Server} - Server exposing only a websocket connection. This server is handling all of the chat features inside of the application, listening for notifications sent by clients, invoking the Core service for different writes (saves, updates) to the database, and dispatching a notification to the intended client.
@@ -32,7 +32,7 @@ Endpoint: /auth/register
 
 Method: POST
 
-Request Body: JSON\cite{JSON} Object containing fullname, email, password and confirmation password.
+Request Body: JSON Object containing fullname, email, password and confirmation password.
 
 Response: JSON Object containing a success message if the request was successful
 
@@ -54,7 +54,7 @@ Query Parameters: verificationToken (string) -> verification token for certain a
 Response: JSON Object containing a success message if the request was successful
 
 
-\textbf{Login}: On login, users submit credentials, which the system verifies against stored hashes. After confirming the account is verified, it generates a cryptographically secure session code, encrypts it, and stores it in the database under the user profile. The code is set in an HttpOnly, Secure cookie\cite{COOKIES}, establishing the authenticated session.
+\textbf{Login}: On login, users submit credentials, which the system verifies against stored hashes. After confirming the account is verified, it generates a cryptographically secure session code, encrypts it, and stores it in the database under the user profile. The code is set in an HttpOnly, Secure cookie, establishing the authenticated session.
 
 Endpoint: /auth/login
 
@@ -274,7 +274,7 @@ Each figure has to have a caption that is a suggestive description of what  the 
 
 Relational databases have long been the default choice for structured data storage, but modern web applications often require far greater flexibility and horizontal scalability than traditional SQL systems can easily provide.  NoSQL databases, in particular document-oriented stores, have emerged to meet these requirements by allowing each record to be a self-describing JSON-like document rather than rigid rows and columns.  This schemaless approach enables rapid evolution of data models as application requirements change, without costly migrations or downtime.
 
-MongoDB is one of the most popular document-oriented NoSQL databases.  It persists data as BSON (Binary JSON) documents, offering rich query capabilities, indexing on nested fields, and atomic operations on single documents.  With built-in support for horizontal sharding and automatic replica sets, MongoDB can scale across many servers while providing high availability and fault tolerance.  Moreover, its native JSON syntax for queries and updates makes the developer experience intuitive when working with JavaScript/TypeScript on both client and server.
+MongoDB\cite{MONGODB} is one of the most popular document-oriented NoSQL databases.  It persists data as BSON (Binary JSON) documents, offering rich query capabilities, indexing on nested fields, and atomic operations on single documents.  With built-in support for horizontal sharding and automatic replica sets, MongoDB can scale across many servers while providing high availability and fault tolerance.  Moreover, its native JSON syntax for queries and updates makes the developer experience intuitive when working with JavaScript/TypeScript on both client and server.
 
 To bridge the gap between the dynamic nature of MongoDB and the static typing guarantees of TypeScript, we employ Mongoose as an Object Document Mapper (ODM).  Mongoose allows us to define strict schemas, enforce validation rules, and hook into lifecycle events (middleware) for tasks like hashing passwords or populating references.  This combination of MongoDB`s flexible document model with Mongoose`s type-safe schema definitions ensures both agility during development and robustness in production.
 
