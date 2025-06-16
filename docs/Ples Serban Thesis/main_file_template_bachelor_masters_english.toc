@@ -12,42 +12,43 @@
 \contentsline {paragraph}{NutriBiochem Mobile Application}{11}{section*.7}%
 \contentsline {section}{\numberline {2.2}Gaps in Current Solutions}{12}{section.2.2}%
 \contentsline {section}{\numberline {2.3}Proposed Solution}{12}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Application Description}{13}{chapter.3}%
+\contentsline {chapter}{\numberline {3}Architecture and Technologies}{13}{chapter.3}%
 \contentsline {section}{\numberline {3.1}Architecture}{13}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Features}{14}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Authentication}{14}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Live-chat}{16}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}File Uploader}{18}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Technology Stack}{20}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Server Implementation}{20}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Client Implementation}{22}{subsection.3.3.2}%
-\contentsline {section}{\numberline {3.4}Interface}{23}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Database Structure}{23}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Overview}{23}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Data Modeling}{23}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Schema Definitions}{24}{subsection.3.5.3}%
-\contentsline {subsubsection}{Account Schema (\texttt {accounts})}{25}{section*.14}%
-\contentsline {subsubsection}{User Schema (\texttt {users})}{26}{section*.16}%
-\contentsline {subsubsection}{Conversation Schema (\texttt {conversations})}{26}{section*.18}%
-\contentsline {subsubsection}{Message Schema (\texttt {messages})}{27}{section*.20}%
-\contentsline {subsubsection}{Notification Schema (\texttt {notifications})}{27}{section*.22}%
-\contentsline {subsubsection}{File Metadata Schema (\texttt {files})}{28}{section*.24}%
-\contentsline {subsection}{\numberline {3.5.4}Indexes and Performance}{29}{subsection.3.5.4}%
-\contentsline {paragraph}{Indexes}{29}{section*.26}%
-\contentsline {section}{\numberline {3.6}Testing strategies}{30}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Framework and Configuration}{30}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Unit Tests}{30}{subsection.3.6.2}%
-\contentsline {section}{\numberline {3.7}Scalability and Performance Considerations}{31}{section.3.7}%
-\contentsline {chapter}{\numberline {4}Future Work}{33}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Integration Testing}{33}{section.4.1}%
-\contentsline {section}{\numberline {4.2}New Features and Integrations}{34}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Study Session Feature}{34}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Google Calendar Integration}{34}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Video Call Service}{34}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Deployment}{35}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}MongoDB Replication}{35}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Containerization and Orchestration}{35}{subsection.4.3.2}%
-\contentsline {paragraph}{Docker Swarm}{35}{section*.27}%
-\contentsline {paragraph}{Kubernetes}{35}{section*.28}%
-\contentsline {subsection}{\numberline {4.3.3}Load Balancing and Service Replication}{35}{subsection.4.3.3}%
-\contentsline {chapter}{Bibliography}{37}{chapter*.29}%
+\contentsline {section}{\numberline {3.2}Technology Stack}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Server Implementation}{14}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Client Implementation}{16}{subsection.3.2.2}%
+\contentsline {chapter}{\numberline {4}Application Description}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Features}{17}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Authentication}{17}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Live-chat}{19}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}File Uploader}{21}{subsection.4.1.3}%
+\contentsline {section}{\numberline {4.2}Interface}{23}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Database Structure}{26}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Overview}{26}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Data Modeling}{26}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Schema Definitions}{27}{subsection.4.3.3}%
+\contentsline {subsubsection}{Account Schema (\texttt {accounts})}{27}{section*.17}%
+\contentsline {subsubsection}{User Schema (\texttt {users})}{28}{section*.19}%
+\contentsline {subsubsection}{Conversation Schema (\texttt {conversations})}{29}{section*.21}%
+\contentsline {subsubsection}{Message Schema (\texttt {messages})}{29}{section*.23}%
+\contentsline {subsubsection}{Notification Schema (\texttt {notifications})}{30}{section*.25}%
+\contentsline {subsubsection}{File Metadata Schema (\texttt {files})}{31}{section*.27}%
+\contentsline {subsection}{\numberline {4.3.4}Indexes and Performance}{32}{subsection.4.3.4}%
+\contentsline {paragraph}{Indexes}{32}{section*.29}%
+\contentsline {section}{\numberline {4.4}Testing strategies}{33}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Framework and Configuration}{33}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Unit Tests}{33}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Scalability and Performance Considerations}{34}{section.4.5}%
+\contentsline {chapter}{\numberline {5}Future Work}{37}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Integration Testing}{37}{section.5.1}%
+\contentsline {section}{\numberline {5.2}New Features and Integrations}{38}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Study Session Feature}{38}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Google Calendar Integration}{38}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Video Call Service}{38}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Deployment}{39}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}MongoDB Replication}{39}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Containerization and Orchestration}{39}{subsection.5.3.2}%
+\contentsline {paragraph}{Docker Swarm}{39}{section*.30}%
+\contentsline {paragraph}{Kubernetes}{39}{section*.31}%
+\contentsline {subsection}{\numberline {5.3.3}Load Balancing and Service Replication}{39}{subsection.5.3.3}%
+\contentsline {chapter}{Bibliography}{41}{chapter*.32}%

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  16 JUN 2025 20:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  16 JUN 2025 21:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -478,7 +478,7 @@ Package hyperref Info: Link coloring OFF on input line 25.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
-<FMI-03.png, id=160, 597.432pt x 597.432pt>
+<FMI-03.png, id=164, 597.432pt x 597.432pt>
 File: FMI-03.png Graphic file (type png)
 <use FMI-03.png>
 Package pdftex.def Info: FMI-03.png  used on input line 33.
@@ -528,9 +528,6 @@ Chapter 1.
 ]
 Chapter 2.
 
-LaTeX Warning: Citation `API' on page 11 undefined on input line 8.
-
-
 
 [11]) (./chapterss/cap3.tex
 
@@ -541,166 +538,204 @@ Chapter 3.
 [13
 
 ]
-<licenta-register.drawio.png, id=286, 793.96625pt x 332.24126pt>
+
+[14]
+
+[15]) (./chapterss/cap4.tex
+
+[16]
+Chapter 4.
+<licenta-register.drawio.png, id=305, 793.96625pt x 332.24126pt>
 File: licenta-register.drawio.png Graphic file (type png)
 <use licenta-register.drawio.png>
-Package pdftex.def Info: licenta-register.drawio.png  used on input line 41.
+Package pdftex.def Info: licenta-register.drawio.png  used on input line 21.
 (pdftex.def)             Requested size: 424.06033pt x 177.45581pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[14]
-<licenta-login.drawio.png, id=292, 743.77875pt x 312.16624pt>
+[17
+
+]
+<licenta-login.drawio.png, id=313, 743.77875pt x 312.16624pt>
 File: licenta-login.drawio.png Graphic file (type png)
 <use licenta-login.drawio.png>
-Package pdftex.def Info: licenta-login.drawio.png  used on input line 69.
+Package pdftex.def Info: licenta-login.drawio.png  used on input line 49.
 (pdftex.def)             Requested size: 424.06033pt x 177.98424pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[15 <./licenta-register.drawio.png>]
+[18 <./licenta-register.drawio.png>]
 
-[16 <./licenta-login.drawio.png>]
-<licenta-join-conversation.drawio.png, id=307, 723.70375pt x 352.31625pt>
+[19 <./licenta-login.drawio.png>]
+<licenta-join-conversation.drawio.png, id=328, 723.70375pt x 352.31625pt>
 File: licenta-join-conversation.drawio.png Graphic file (type png)
 <use licenta-join-conversation.drawio.png>
-Package pdftex.def Info: licenta-join-conversation.drawio.png  used on input line 113.
+Package pdftex.def Info: licenta-join-conversation.drawio.png  used on input line 93.
 (pdftex.def)             Requested size: 424.06033pt x 206.44554pt.
-<licenta-ws.drawio.png, id=308, 723.70375pt x 352.31625pt>
+<licenta-ws.drawio.png, id=330, 723.70375pt x 352.31625pt>
 File: licenta-ws.drawio.png Graphic file (type png)
 <use licenta-ws.drawio.png>
-Package pdftex.def Info: licenta-ws.drawio.png  used on input line 121.
+Package pdftex.def Info: licenta-ws.drawio.png  used on input line 101.
 (pdftex.def)             Requested size: 424.06033pt x 206.44554pt.
 
-Underfull \vbox (badness 1320) has occurred while \output is active []
+Underfull \vbox (badness 1270) has occurred while \output is active []
 
 
 
-[17 <./licenta-join-conversation.drawio.png>]
+[20 <./licenta-join-conversation.drawio.png>]
 
-[18 <./licenta-ws.drawio.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 141--143
+[21 <./licenta-ws.drawio.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 121--123
 []\OT1/cmr/bx/n/12 Client HTTP Re-quest \OT1/cmr/m/n/12 The fron-tend sends the file as
  []
 
-<licenta-uploader.drawio.png, id=322, 743.77875pt x 783.92876pt>
+<licenta-uploader.drawio.png, id=345, 743.77875pt x 783.92876pt>
 File: licenta-uploader.drawio.png Graphic file (type png)
 <use licenta-uploader.drawio.png>
-Package pdftex.def Info: licenta-uploader.drawio.png  used on input line 157.
+Package pdftex.def Info: licenta-uploader.drawio.png  used on input line 137.
 (pdftex.def)             Requested size: 424.06033pt x 446.96365pt.
 
 Underfull \vbox (badness 4168) has occurred while \output is active []
 
 
 
-[19]
-
-[20 <./licenta-uploader.drawio.png>]
-
-[21]
-
 [22]
-File: FMI-03.png Graphic file (type png)
-<use FMI-03.png>
-Package pdftex.def Info: FMI-03.png  used on input line 266.
-(pdftex.def)             Requested size: 106.01508pt x 106.01073pt.
+<screenshots/chat-feature.png, id=353, 1445.4pt x 903.375pt>
+File: screenshots/chat-feature.png Graphic file (type png)
+<use screenshots/chat-feature.png>
+Package pdftex.def Info: screenshots/chat-feature.png  used on input line 149.
+(pdftex.def)             Requested size: 424.06033pt x 265.03217pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-[23]
+
+[23 <./licenta-uploader.drawio.png>]
+<screenshots/file-feature.png, id=361, 1445.4pt x 903.375pt>
+File: screenshots/file-feature.png Graphic file (type png)
+<use screenshots/file-feature.png>
+Package pdftex.def Info: screenshots/file-feature.png  used on input line 158.
+(pdftex.def)             Requested size: 424.06033pt x 265.03217pt.
+<screenshots/profile-feature.png, id=363, 1445.4pt x 903.375pt>
+File: screenshots/profile-feature.png Graphic file (type png)
+<use screenshots/profile-feature.png>
+Package pdftex.def Info: screenshots/profile-feature.png  used on input line 167.
+(pdftex.def)             Requested size: 424.06033pt x 265.03217pt.
+
+
+[24 <./screenshots/chat-feature.png> <./screenshots/file-feature.png>]
+<screenshots/upload-feature.png, id=373, 1445.4pt x 903.375pt>
+File: screenshots/upload-feature.png Graphic file (type png)
+<use screenshots/upload-feature.png>
+Package pdftex.def Info: screenshots/upload-feature.png  used on input line 176.
+(pdftex.def)             Requested size: 424.06033pt x 265.03217pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[25 <./screenshots/profile-feature.png> <./screenshots/upload-feature.png>]
+
+[26]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 312.
-
-
-[24]
-LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 319.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 222.
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 229.
  (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 319.
-<account-schema.png, id=355, 263.48438pt x 314.17375pt>
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 229.
+
+
+[27]
+<account-schema.png, id=397, 263.48438pt x 314.17375pt>
 File: account-schema.png Graphic file (type png)
 <use account-schema.png>
-Package pdftex.def Info: account-schema.png  used on input line 333.
+Package pdftex.def Info: account-schema.png  used on input line 243.
 (pdftex.def)             Requested size: 263.48372pt x 314.17297pt.
 
-Underfull \hbox (badness 1147) in paragraph at lines 342--343
+Underfull \hbox (badness 1147) in paragraph at lines 252--253
 []\OT1/cmr/m/n/12 Basic iden-tity fields; email is
  []
 
-
-
-[25 <./account-schema.png>]
-<profile-schema.png, id=366, 163.61125pt x 188.20313pt>
+<profile-schema.png, id=399, 163.61125pt x 188.20313pt>
 File: profile-schema.png Graphic file (type png)
 <use profile-schema.png>
-Package pdftex.def Info: profile-schema.png  used on input line 350.
+Package pdftex.def Info: profile-schema.png  used on input line 260.
 (pdftex.def)             Requested size: 163.61084pt x 188.20265pt.
-<conversation-schema.png, id=367, 176.15813pt x 198.7425pt>
+
+Underfull \vbox (badness 4353) has occurred while \output is active []
+
+
+
+[28 <./account-schema.png>]
+<conversation-schema.png, id=410, 176.15813pt x 198.7425pt>
 File: conversation-schema.png Graphic file (type png)
 <use conversation-schema.png>
-Package pdftex.def Info: conversation-schema.png  used on input line 366.
+Package pdftex.def Info: conversation-schema.png  used on input line 276.
 (pdftex.def)             Requested size: 176.15768pt x 198.742pt.
 
 
-[26 <./profile-schema.png> <./conversation-schema.png>]
-Underfull \hbox (badness 1158) in paragraph at lines 383--384
+[29 <./profile-schema.png> <./conversation-schema.png>]
+Underfull \hbox (badness 1158) in paragraph at lines 293--294
 []\OT1/cmr/m/n/12 Emoji or re-ac-tion iden-ti-fiers at-tached by
  []
 
-<message-schema.png, id=380, 191.71625pt x 289.58188pt>
+<message-schema.png, id=422, 191.71625pt x 289.58188pt>
 File: message-schema.png Graphic file (type png)
 <use message-schema.png>
-Package pdftex.def Info: message-schema.png  used on input line 390.
+Package pdftex.def Info: message-schema.png  used on input line 300.
 (pdftex.def)             Requested size: 191.71577pt x 289.58116pt.
-<notification-schema.png, id=381, 156.08313pt x 190.7125pt>
+<notification-schema.png, id=424, 156.08313pt x 190.7125pt>
 File: notification-schema.png Graphic file (type png)
 <use notification-schema.png>
-Package pdftex.def Info: notification-schema.png  used on input line 410.
+Package pdftex.def Info: notification-schema.png  used on input line 320.
 (pdftex.def)             Requested size: 156.08273pt x 190.71202pt.
 
 
-[27 <./message-schema.png>]
-<file-schema.png, id=390, 173.14688pt x 271.51437pt>
+[30 <./message-schema.png>]
+<file-schema.png, id=433, 173.14688pt x 271.51437pt>
 File: file-schema.png Graphic file (type png)
 <use file-schema.png>
-Package pdftex.def Info: file-schema.png  used on input line 434.
+Package pdftex.def Info: file-schema.png  used on input line 344.
 (pdftex.def)             Requested size: 173.14645pt x 271.51369pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[28 <./notification-schema.png>]
-Underfull \hbox (badness 6063) in paragraph at lines 465--466
+[31 <./notification-schema.png>]
+Underfull \hbox (badness 6063) in paragraph at lines 375--376
 []\OT1/cmtt/m/n/12 accounts.verificationTokenExpiration\OT1/cmr/m/n/12 : au-to-mat-i-cally re-moves
  []
 
 
 
-[29 <./file-schema.png>]
+[32 <./file-schema.png>]
 
-[30]
+[33]
 
-[31]) (./chapterss/cap4.tex
-
-[32]
-Chapter 4.
-
-
-[33
-
-]
-
-[34]) (./main_file_template_bachelor_masters_english.bbl
+[34]) (./chapterss/cap5.tex
 
 [35]
 
 [36
+
+]
+Chapter 5.
+
+
+[37]
+
+[38]) (./main_file_template_bachelor_masters_english.bbl
+
+[39]
+
+[40
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 35--37
@@ -719,31 +754,27 @@ Underfull \hbox (badness 2635) in paragraph at lines 60--61
 
 )
 
-[37] (./main_file_template_bachelor_masters_english.aux)
+[41] (./main_file_template_bachelor_masters_english.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Warning: There were undefined references.
-
 Package rerunfilecheck Info: File `main_file_template_bachelor_masters_english.out' has not changed.
-(rerunfilecheck)             Checksum: D8A13994CBC324D284413B316A7D7D6E;5780.
+(rerunfilecheck)             Checksum: 4B111F0D9E28E3125E86977F8664262E;5975.
  ) 
 Here is how much of TeX's memory you used:
- 16024 strings out of 473190
- 258542 string characters out of 5704335
- 675132 words of memory out of 5000000
- 38941 multiletter control sequences out of 15000+600000
+ 16072 strings out of 473190
+ 259889 string characters out of 5704335
+ 674856 words of memory out of 5000000
+ 38978 multiletter control sequences out of 15000+600000
  567734 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,7n,79p,1345b,664s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,1329b,669s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main_file_template_bachelor_masters_english.pdf (37 pages, 559455 bytes).
+Output written on main_file_template_bachelor_masters_english.pdf (41 pages, 3656573 bytes).
 PDF statistics:
- 530 PDF objects out of 1000 (max. 8388607)
- 442 compressed objects within 5 object streams
- 118 named destinations out of 1000 (max. 500000)
- 373 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 577 PDF objects out of 1000 (max. 8388607)
+ 477 compressed objects within 5 object streams
+ 126 named destinations out of 1000 (max. 500000)
+ 401 words of extra memory for PDF output out of 10000 (max. 10000000)
 

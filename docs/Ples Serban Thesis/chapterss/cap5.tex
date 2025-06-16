@@ -1,0 +1,67 @@
+\chapter{Future Work}
+
+This chapter outlines planned improvements and extensions to \emph{Cloud Class}, focusing on achieving 100\% integration test coverage, adding new features and third-party integrations, and enhancing deployment strategies for greater reliability and scalability.
+
+
+
+\section{Integration Testing}
+
+Integration tests go beyond individual modules to validate that my microservices and supporting infrastructure collaborate seamlessly. By running full end-to-end scenarios—from incoming HTTP or message-queue requests through background-job execution and database operations—I can uncover issues such as misrouted messages, data-format mismatches, or broken service contracts before they affect real users. Achieving 100\% coverage in integration tests will also give me the confidence to refactor core components, evolve data schemas, and extend APIs without fear of unintended side effects.
+
+To put this into practice, I will:
+
+\begin{itemize}
+  \item Set up a \textbf{Docker-Compose-based test environment} that launches all eight microservices alongside MongoDB (configured as a replica set), Redis, MinIO, and both RabbitMQ and BullMQ brokers.  Automated scripts will then invoke HTTP endpoints with SuperTest and publish to queues via Newman to exercise every part of the system.
+  \item Introduce \textbf{consumer-driven contract testing} (for example, with Pact) so that each service explicitly verifies the schemas it expects from its peers, preventing subtle API drifts and ensuring compatibility across deployments.
+  \item Use \textbf{in-memory database instances} (such as MongoDB Memory Server and an embedded Redis) together with ephemeral queue brokers to keep tests fast, isolated, and free from interference with production data.
+  \item Integrate all integration suites into my \textbf{GitHub Actions pipeline}, organizing tests by service domain and running them in parallel.  This approach will maintain quick feedback for development while enforcing strict coverage thresholds before merging changes.
+\end{itemize}
+
+
+
+\section{New Features and Integrations}
+
+I plan to introduce two new capabilities—Google Calendar synchronization and a built-in video call feature.  In a microservice architecture, this can be as straightforward as adding two dedicated services alongside the existing ones.
+
+\subsection{Study Session Feature}
+
+The Study Session service will let users create, join, and manage collaborative study meetings. It will provide endpoints such as \texttt{/study-sessions} for listing upcoming sessions and \texttt{/study-sessions/:id/join} for RSVP-style participation. Internally, it will store session details—topic, start and end times, participant list—and emit events whenever sessions are created, updated, or canceled. Other services (like Calendar and Video Call) will subscribe to these events to keep in sync.
+
+\subsection{Google Calendar Integration}
+
+The Calendar microservice will serve as a bridge between this application and the Google Calendar API.  Its responsibilities include handling OAuth2 flows, synchronizing events, and delivering calendar data to other services.
+
+First, I will define a narrow REST API within the new service for operations such as \texttt{GET /calendar/events}, \texttt{POST /calendar/events}, and \texttt{DELETE /calendar/events}.  Internally, the service will manage user credentials and tokens in a secure store, refreshing them as needed via the Google OAuth2 endpoint.  A background scheduler will poll or subscribe to calendar push notifications, ensuring that any changes in a user`s Google Calendar are reflected in my system within seconds.  When a user schedules a class the Calendar service will create or update the corresponding Google Calendar entry.  Error handling and retry logic will ensure resilience against transient API failures.
+
+\subsection{Video Call Service}
+
+The Video Call microservice will manage session setup and signaling for real-time audio and video between users. To do this, I'll expose endpoints like \texttt{POST /calls/create}, \texttt{POST /calls/join}, and use a WebSocket or Socket.IO namespace to exchange things like SDP offers, ICE candidates, and call metadata.
+
+Behind the scenes, this service will connect to a WebRTC media server (such as Janus or mediasoup) to handle NAT traversal (using STUN/TURN) and route the actual media streams. It will also check with the Auth microservice to make sure users are allowed to join or start calls. Call details—like participants, start/end times, and whether the call was recorded—will be stored in MongoDB for later use.
+
+By keeping all video logic in its own microservice, I can scale the video part (like TURN servers) separately from other parts of the app like chat or file uploads.
+
+Like the others, this microservice will be built with NestJS, TypeScript, and Docker.
+\section{Deployment}
+
+Ensuring the reliable operation for my application requires a considered deployment strategy composed of three key elements: database resilience, container orchestration, and traffic management.
+
+\subsection{MongoDB Replication}
+
+MongoDB will be deployed as a three-node replica set to provide data redundancy and automatic failover. In the event that the primary node becomes unavailable, a secondary node will assume the primary role without manual intervention, thereby minimizing downtime. Read preferences will be configured to direct reporting and analytical queries to secondary nodes, which helps to distribute read load and preserve primary performance. Additionally, the built-in change stream functionality will be leveraged to support real-time features—such as notifications and audit logging—while avoiding unnecessary complexity in the application layer.
+
+\subsection{Containerization and Orchestration}
+
+All services are packaged as Docker containers to ensure consistency across development, testing, and production environments. Two orchestration platforms will be evaluated:
+
+\paragraph{Docker Swarm}  
+Offers a straightforward setup with native clustering, service replication, and rolling updates. Its simplicity makes it well suited for smaller teams or early‐stage deployments.
+
+\paragraph{Kubernetes}  
+Provides a more comprehensive feature set, including declarative resource definitions, automated scaling through the Horizontal Pod Autoscaler, and support for stateful workloads via StatefulSets. Its extensive ecosystem—encompassing service meshes, GitOps tools, and monitoring solutions—makes it ideal for large‐scale, production‐grade environments.
+
+The choice between these platforms will be guided by the desired balance between operational simplicity and the need for advanced scalability and resilience features.
+
+\subsection{Load Balancing and Service Replication}
+
+An ingress controller (for example, Nginx\cite{NGINX} or Traefik\cite{NGINX}) will be deployed to manage external traffic. This component will perform TLS termination, path-based routing, and distribute incoming requests evenly across available service replicas. Health checks and readiness probes will ensure that only healthy instances receive traffic, and rolling-update or canary deployment strategies will minimize user impact during releases. Finally, autoscaling policies—based on metrics such as CPU utilization, memory consumption, and application-specific indicators—will enable the system to adjust its capacity dynamically, ensuring consistent performance while optimizing infrastructure costs.  

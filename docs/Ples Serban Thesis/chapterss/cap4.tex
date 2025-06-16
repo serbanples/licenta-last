@@ -1,76 +1,448 @@
-\chapter{Future Work}
+\chapter{Application Description}
 
-This chapter outlines planned improvements and extensions to \emph{Cloud Class}, focusing on achieving 100\% integration test coverage, adding new features and third-party integrations, and enhancing deployment strategies for greater reliability and scalability.
+\section{Features}
+The main features of the application are: a steady authentication, a live-chat for allowing students to study in groups and a file-sharing system for easily sharing study notes.
 
-% \section{Integration Testing}
+\subsection{Authentication}
+The most important part of any web based application is the authentication. While developing the authentication system for my application, I followed OAuth2\cite{OAUTH2} standards. 
 
-% While unit tests validate individual modules in isolation, integration tests are essential to verify that the various microservices and infrastructure components work together correctly.  By exercising entire workflows—from HTTP or RabbitMQ entry points through background jobs and database interactions—we can catch misconfigurations, serialization mismatches, and contract regressions before they reach production.  Full integration test coverage will also give us confidence when refactoring core logic, evolving schemas, or extending APIs.
+\textbf{Registration}: During registration, users submit their full name, email, password and a confirmation password. The system hashes the password with a strong algorithm (implemented using bcryptjs), creates a new user record marked as unverified, and generates a time-limited email verification token. The token is stored in the database and emailed, prompting users to confirm their address. (Figure \ref{fig:register-flow})
 
-% To achieve this, we will:
+Endpoint: /auth/register
 
-% \begin{itemize}
-%   \item Provision a \textbf{Docker-Compose-based test environment} that brings up all eight microservices alongside MongoDB (replica set), Redis, MinIO, and message brokers (RabbitMQ, BullMQ).  Automated scripts will then exercise HTTP and RabbitMQ endpoints using SuperTest or Newman.
-%   \item Adopt \textbf{consumer-driven contract testing} (e.g.\ with Pact) so that each service’s producer and consumer tests enforce shared request/response schemas, preventing subtle API drifts.
-%   \item Leverage \textbf{in-memory database instances} (MongoDB Memory Server, embedded Redis) and ephemeral queues to isolate test runs from production data, ensuring fast, repeatable feedback.
-%   \item Integrate all integration suites into our \textbf{GitHub Actions pipeline}, splitting tests by service domain and running them in parallel to maintain rapid CI turnaround while enforcing coverage gates.
-% \end{itemize}
+Method: POST
 
-\section{Integration Testing}
+Request Body: JSON Object containing fullname, email, password and confirmation password.
 
-Integration tests go beyond individual modules to validate that my microservices and supporting infrastructure collaborate seamlessly. By running full end-to-end scenarios—from incoming HTTP or message-queue requests through background-job execution and database operations—I can uncover issues such as misrouted messages, data-format mismatches, or broken service contracts before they affect real users. Achieving 100\% coverage in integration tests will also give me the confidence to refactor core components, evolve data schemas, and extend APIs without fear of unintended side effects.
+Response: JSON Object containing a success message if the request was successful
 
-To put this into practice, I will:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{licenta-register.drawio.png}
+  \caption{Register Flow}
+  \label{fig:register-flow}
+\end{figure}
 
+\textbf{Verify Account}: When users click the verification link, the system extracts the token and searches the database for a matching, unexpired record. If valid, it marks the user’s account as verified, removes the token to prevent reuse, and returns a success response, enabling full access to login and other protected features.
+
+Endpoint: /auth/verifyaccount
+
+Method: GET
+
+Query Parameters: verificationToken (string) -> verification token for certain account, recieved via email.
+
+Response: JSON Object containing a success message if the request was successful
+
+
+\textbf{Login}: On login, users submit credentials, which the system verifies against stored hashes. After confirming the account is verified, it generates a cryptographically secure session code, encrypts it, and stores it in the database under the user profile. The code is set in an HttpOnly, Secure cookie, establishing the authenticated session. (Figure \ref{fig:login-flow})
+
+Endpoint: /auth/login
+
+Method: POST
+
+Request Body: JSON Object containing email, and password.
+
+Response: JSON Object containing a success message if the request was successful.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\linewidth]{licenta-login.drawio.png}
+  \caption{Login Flow}
+  \label{fig:login-flow}
+\end{figure}
+
+\textbf{Reset Password}: When a password reset is requested, users provide their email address. The system generates a short-lived, cryptographically random reset token, stores it, and emails a reset link. Upon visiting the link and submitting a new password, the system validates the token, updates the password hash and deletes the token.
+
+Endpoint: /auth/reset-password
+
+Method: POST
+
+Request Body: JSON Object containing reset token, password and confirmation password.
+
+Response: JSON Object containing a success message if the request was successful
+
+
+\textbf{Logout}: For logout, the client sends a request to invalidate the session. The server locates the encrypted session code in the database, removes it, and instructs the browser to clear the authentication cookie by setting it with a past expiration. The user is then unauthenticated for any subsequent requests.
+
+Endpoint: /auth/logout
+
+Method: POST
+
+Response: JSON Object containing a success message if the request was successful.
+
+\textbf{Whoami}: For Whoami, the client sends a request to get the user holding the current session. The server locates the encrypted session code in the database, and returns the user data.
+
+Endpoint: /auth/whoami
+
+Method: Get
+
+Response: JSON Object containing userId, role and email of the logged in user if the request was successful.
+
+\subsection{Live-chat}
+The main part of any peer to peer platform is a real-time chat. Since this application focuses on providing students a way to communicate with each other in order to make stuying togheter easier, a real-time chat is a core functionality that I had to implement.
+
+The real-time chat is implemented using Web Sockets\cite{WEB_SOCKET}. Even though Web Sockets are usually used for machine to machine communication, most applications that include a real-time chat like Microsoft Teams, Discord, Whatsapp use Web Sockets under to hood.
+
+Web Sockets work by creating a bidirectional communication channel between clients and servers. Data is transported on this channel using messages. Each message must have a defined 'name' and maybe have some content.
+
+In my implementation, I started by thinking about all of the messages that would be used inside of a chat application. After careful consideration, I ended up with 5 message types that my application must use:
 \begin{itemize}
-  \item Set up a \textbf{Docker-Compose-based test environment} that launches all eight microservices alongside MongoDB (configured as a replica set), Redis, MinIO, and both RabbitMQ and BullMQ brokers.  Automated scripts will then invoke HTTP endpoints with SuperTest and publish to queues via Newman to exercise every part of the system.
-  \item Introduce \textbf{consumer-driven contract testing} (for example, with Pact) so that each service explicitly verifies the schemas it expects from its peers, preventing subtle API drifts and ensuring compatibility across deployments.
-  \item Use \textbf{in-memory database instances} (such as MongoDB Memory Server and an embedded Redis) together with ephemeral queue brokers to keep tests fast, isolated, and free from interference with production data.
-  \item Integrate all integration suites into my \textbf{GitHub Actions pipeline}, organizing tests by service domain and running them in parallel.  This approach will maintain quick feedback for development while enforcing strict coverage thresholds before merging changes.
+    \item \textbf{Join Conversation} - Message sent from the client side, containing the user authentication token and a conversationId. The server then checks if the user is a participant of that conversation, and responds back with a message of 'joined-conversation' (Figure \ref{fig:join-conversation-flow}).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{licenta-join-conversation.drawio.png}
+        \caption{Join Conversation Flow}
+        \label{fig:join-conversation-flow}
+    \end{figure}
+    \item \textbf{Leave Conversation} - This message is sent by the client side, when a user decides to leave a conversation. Leaving a conversation is done by either joining a different conversation, navigating to a different part of the application or closing the application. For this message, the server just removes the client from the conversation session.
+    \item \textbf{Send Message} - This is the last and most importand message sent from the client application. Everytime the user creates a message and decides to send it, the application will send a message containing the user`s authentication token, message content and conversationId. After creating a database entry with the message details, the server responds back with 'recieve-message', in order to alret the application that a new message appeared (Figure \ref{fig:send-message-flow}).
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{licenta-ws.drawio.png}
+        \caption{Send Message Flow}
+        \label{fig:send-message-flow}
+    \end{figure}
+    \item \textbf{Recieve Message} - The server sends this message after creating a entry in the database for the message sent by a user. The content of this message is the full database entry created. The client application listens for this message and correctly displays the new chat.
+    \item \textbf{Joined Conversation} - After a user joins a conversation, the server sends this message back to the client application. This notifies the application that it can let the user start sending messages and recieving messages.
 \end{itemize}
 
+\subsection{File Uploader}
+In the early days of file exchange, teams set up FTP servers on static IPs, juggling usernames, anonymous logins, and fragile directory hierarchies. Uploads would time out, backups were manual, and there was no easy way to integrate with modern web apps. As requirements grew—from embedding user-generated images in chat apps to serving large datasets via HTTP—FTP simply couldn’t keep up. Object storage emerged as the successor: a RESTful, scalable, self-healing store where applications can generate time-limited download links, automatically version files, and offload the burden of replication and durability. Today, replacing FTP with an S3-compatible store streamlines both developer workflows and end-user experience, turning clunky file drops into seamless, secure uploads and downloads.
+
+S3-compatible object storage treats each file as an immutable “object” stored in a flat namespace of buckets. It exposes a simple HTTP API—PUT to upload, GET to download, DELETE to remove—so developers don’t wrestle with filesystem mounts or NFS quirks. Objects can carry arbitrary metadata (key/value tags or headers), and platforms often offer built-in features like automatic replication across nodes, lifecycle policies (e.g. archive or delete old versions), and fine-grained access controls. Because it’s designed for petabyte-scale data, S3-style stores provide high throughput for large payloads, seamless horizontal scaling, and durability guarantees that make them a natural fit for user uploads, backups, and any scenario where large binary blobs need reliable, cost-effective storage.
+
+Traditional databases shine at structured records: rich querying, ACID transactions, indexing, and relationships across tables. However, stuffing multi-megabyte or multi-gigabyte files into a database can bloat its storage engine, slow down queries and backups, and drive up resource costs. In contrast, an S3-style object store offloads blob storage entirely, keeping the database lean for metadata lookups and relational joins. Object stores scale throughput linearly with added nodes, use pay-as-you-store pricing models, and excel at serving large downloads with built-in HTTP caching semantics. While a database might store a file’s URL and metadata, the object store holds the bytes—each in its own durable, self-healing container.
+
+In \emph{Cloud Class}, the file uploader is a key component that allows users to share study materials, lecture notes, and other resources. It is designed to handle large files efficiently while ensuring reliability and scalability. The uploader integrates with an S3-compatible object storage service (MinIO) for storing files, and uses a message queue (BullMQ) to manage upload jobs asynchronously.
+
+The file uploader is implemented as an asynchronous pipeline that delegates heavy I/O work to background workers. When a user submits a file, the client issues an HTTP POST to the webserver, which immediately enqueues a processing job and returns a 201 Created. A dedicated worker then uploads the file to object storage and notifies the persistence service to save metadata in the database, linking the file to the user’s record. (Figure \ref{fig:file-upload-flow})
+
+\begin{itemize}
+\item \textbf{Client HTTP Request}
+The frontend sends the file as \texttt{multipart/form-data} to \texttt{/files/upload} and receives back a job identifier.
+\item \textbf{Webserver Endpoint}
+The HTTP handler enqueues a “process-file” job on the queue, packaging the raw file bytes along with user context.
+\item \textbf{Job Queue}
+Redis + BullMQ persist and manage jobs with retry policies, ensuring uploads survive transient failures.
+\item \textbf{Worker Process}
+A background worker consumes each job, reconstructs the file buffer, generates a unique storage key, and uploads the file to the S3-compatible store.
+\item \textbf{Object Storage}
+Minio stores the binary in a bucket and returns a URL or object key.
+\item \textbf{Persistence Service}
+Upon successful storage, an event is sent to the core service, which creates a MongoDB document for the file (URL, key, MIME type, size, uploader ID, timestamps) and adds a reference to the user’s files array.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{licenta-uploader.drawio.png}
+\caption{File Upload Flow}
+\label{fig:file-upload-flow}
+\end{figure}
 
 
-\section{New Features and Integrations}
+\section{Interface}
 
-I plan to introduce two new capabilities—Google Calendar synchronization and a built-in video call feature.  In our microservice architecture, this can be as straightforward as adding two dedicated services alongside the existing ones.
+This is the user interface for chat feature, where users can send and receive messages in real-time (Figure \ref{fig:chat-feature}).
 
-\subsection{Study Session Feature}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{screenshots/chat-feature.png}
+    \caption{User interface for the chat feature}
+    \label{fig:chat-feature}
+\end{figure}
 
-The Study Session service will let users create, join, and manage collaborative study meetings. It will provide endpoints such as \texttt{/study-sessions} for listing upcoming sessions and \texttt{/study-sessions/:id/join} for RSVP-style participation. Internally, it will store session details—topic, start and end times, participant list—and emit events whenever sessions are created, updated, or canceled. Other services (like Calendar and Video Call) will subscribe to these events to keep in sync.
+This is the user interface for displaying information about a study resource, from where users can download it (Figure \ref{fig:file-feature}).
 
-\subsection{Google Calendar Integration}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{screenshots/file-feature.png}
+    \caption{User interface for the file feature}
+    \label{fig:file-feature}
+\end{figure}
 
-The Calendar microservice will serve as a bridge between \emph{Cloud Class} and the Google Calendar API.  Its responsibilities include handling OAuth2 flows, synchronizing events, and delivering calendar data to other services in our platform.
+This is the user interface for displaying profile information. In this interface, other users can see a specific user`s uploaded files and additional data about them. (Figure \ref{fig:profile-feature}).
 
-First, I will define a narrow REST API within the new service for operations such as \texttt{GET /calendar/events}, \texttt{POST /calendar/events}, and \texttt{DELETE /calendar/events}.  Internally, the service will manage user credentials and tokens in a secure store, refreshing them as needed via the Google OAuth2 endpoint.  A background scheduler will poll or subscribe to calendar push notifications, ensuring that any changes in a user`s Google Calendar are reflected in our system within seconds.  When a user schedules a class, the Class microservice will emit an event (via RabbitMQ), which the Calendar service will consume to create or update the corresponding Google Calendar entry.  Error handling and retry logic will ensure resilience against transient API failures.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{screenshots/profile-feature.png}
+    \caption{User interface for the profile feature}
+    \label{fig:profile-feature}
+\end{figure}
 
-\subsection{Video Call Service}
+This is the user interface for uploading a file. Using this interface, the user can drag and drop a file inside of the marked area, edit the name, add a description, and upload the file directly to the server (Figure \ref{fig:upload-feature}).
 
-The Video Call microservice will handle session negotiation and signaling for real-time audio/video between users.  To do this, I will expose endpoints such as \texttt{POST /calls/create}, \texttt{POST /calls/join}, and a WebSocket or Socket.IO namespace for exchanging SDP offers, ICE candidates, and call metadata.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{screenshots/upload-feature.png}
+    \caption{User interface for the upload feature}
+    \label{fig:upload-feature}
+\end{figure}
 
-Under the hood, the service will integrate with a WebRTC media server (for example, a managed service or an open-source solution like Janus or mediasoup) to handle NAT traversal (STUN/TURN) and media routing.  Authentication tokens will be verified by consulting the Auth microservice, ensuring that only authorized users can start or join sessions.  Call session state—participants, start/end times, and recording toggles—will be persisted to MongoDB, enabling audit trails and post-call processing.  By isolating all signaling and media logic in a dedicated microservice, I can independently scale video infrastructure (e.g.\ TURN servers) according to usage patterns, without impacting the performance of chat, notification, or storage services.
+\section{Database Structure}
 
-All three of these new microservices will be developed using the same technology stack (NestJS, TypeScript, Docker).
-\section{Deployment}
+\subsection{Overview}
 
-Ensuring the reliable operation of \emph{Cloud Class} requires a considered deployment strategy composed of three key elements: database resilience, container orchestration, and traffic management.
+Relational databases have long been the default choice for structured data storage, but modern web applications often require far greater flexibility and horizontal scalability than traditional SQL systems can easily provide.  NoSQL databases, in particular document-oriented stores, have emerged to meet these requirements by allowing each record to be a self-describing JSON-like document rather than rigid rows and columns.  This schemaless approach enables rapid evolution of data models as application requirements change, without costly migrations or downtime.
 
-\subsection{MongoDB Replication}
+MongoDB\cite{MONGODB} is one of the most popular document-oriented NoSQL databases.  It persists data as BSON (Binary JSON) documents, offering rich query capabilities, indexing on nested fields, and atomic operations on single documents.  With built-in support for horizontal sharding and automatic replica sets, MongoDB can scale across many servers while providing high availability and fault tolerance.  Moreover, its native JSON syntax for queries and updates makes the developer experience intuitive when working with JavaScript/TypeScript on both client and server.
 
-MongoDB will be deployed as a three-node replica set to provide data redundancy and automatic failover. In the event that the primary node becomes unavailable, a secondary node will assume the primary role without manual intervention, thereby minimizing downtime. Read preferences will be configured to direct reporting and analytical queries to secondary nodes, which helps to distribute read load and preserve primary performance. Additionally, the built-in change stream functionality will be leveraged to support real-time features—such as notifications and audit logging—while avoiding unnecessary complexity in the application layer.
+To bridge the gap between the dynamic nature of MongoDB and the static typing guarantees of TypeScript, I used Mongoose as an Object Document Mapper (ODM).  Mongoose allows strict schema definitions, validation rules enforcing, and hooking into lifecycle events (middleware) for tasks like hashing passwords or populating references.  This combination of MongoDB`s flexible document model with Mongoose`s type-safe schema definitions ensures both agility during development and robustness in production.
 
-\subsection{Containerization and Orchestration}
+\subsection{Data Modeling}
 
-All services are packaged as Docker containers to ensure consistency across development, testing, and production environments. Two orchestration platforms will be evaluated:
+In a schemaless document store like MongoDB, documents can in principle contain any structure.  However, imposing a schema at the application level provides consistency, validation and clarity.  Data modeling involves defining, for each collection, the shape of its documents: field names, data types, default values, required properties and indexing strategies.  This layer of structure enables the application to enforce invariants (e.g.\ “email must be a non-empty string” or “createdAt must always be present”), catch errors early, and generate optimized queries.
 
-\paragraph{Docker Swarm}  
-Offers a straightforward setup with native clustering, service replication, and rolling updates. Its simplicity makes it well suited for smaller teams or early‐stage deployments.
+Schema options often include:
+\begin{itemize}
+  \item \textbf{Automatic Timestamps:}  Adding \texttt{createdAt} and \texttt{updatedAt} fields to every document to track its lifecycle.
+  \item \textbf{Serialization Transforms:}  Customizing how documents are converted to JSON—for example converting internal object IDs into strings and removing internal metadata fields.
+  \item \textbf{Validation Rules:}  Specifying which fields are required, their allowed types (String, Number, Boolean, Date, ObjectId, Array, etc.), and constraints such as unique or enum values.
+  \item \textbf{Default Values:}  Providing sensible defaults (e.g.\ an empty array for list fields, `false` for boolean flags) to simplify document creation.
+\end{itemize}
 
-\paragraph{Kubernetes}  
-Provides a more comprehensive feature set, including declarative resource definitions, automated scaling through the Horizontal Pod Autoscaler, and support for stateful workloads via StatefulSets. Its extensive ecosystem—encompassing service meshes, GitOps tools, and monitoring solutions—makes it ideal for large‐scale, production‐grade environments.
+Modeling relationships in a document database can be achieved in two main ways:
+\begin{itemize}
+  \item \textbf{References:}  Storing the identifier of a related document (typically an ObjectId) in a field.  This keeps collections normalized and minimizes duplication, at the cost of additional lookups when joining data at query time.
+  \item \textbf{Embedded Subdocuments:}  Nesting related data directly within a parent document.  This approach denormalizes data for faster reads and atomic updates of the entire structure, best suited for “owns” or “contains” relationships with bounded subdocument sizes.
+\end{itemize}
 
-The choice between these platforms will be guided by the desired balance between operational simplicity and the need for advanced scalability and resilience features.
+Finally, careful use of indexes is critical for query performance and data integrity:
+\begin{itemize}
+  \item \textbf{Unique Indexes:}  Enforce uniqueness on fields such as email addresses or usernames to prevent duplicate accounts.
+  \item \textbf{Compound Indexes:}  Accelerate queries involving multiple fields (e.g.\ sorting messages by conversation and timestamp).
+  \item \textbf{TTL Indexes:}  Automatically expire documents after a given time, useful for short-lived tokens or audit logs.
+\end{itemize}
 
-\subsection{Load Balancing and Service Replication}
+By combining a clear schema definition with appropriate relationship modeling and indexing, the application gains both the flexibility of a document store and the reliability of a structured database. 
 
-An ingress controller (for example, Nginx\cite{NGINX} or Traefik\cite{NGINX}) will be deployed to manage external traffic. This component will perform TLS termination, path-based routing, and distribute incoming requests evenly across available service replicas. Health checks and readiness probes will ensure that only healthy instances receive traffic, and rolling-update or canary deployment strategies will minimize user impact during releases. Finally, autoscaling policies—based on metrics such as CPU utilization, memory consumption, and application-specific indicators—will enable the system to adjust its capacity dynamically, ensuring consistent performance while optimizing infrastructure costs.  
+\subsection{Schema Definitions}
+
+Below I would like to present each schema with its MongoDB collection name and a concise description of the most important fields and relationships.
+
+\subsubsection{Account Schema (\texttt{accounts})}
+Models user authentication, authorization, and credential management (Figure \ref{fig:acc-schema}).
+\begin{description}
+  \item[\texttt{email} (\emph{String}, required, unique)]  
+    Primary login identifier, enforced as unique to prevent duplicates.
+  \item[\texttt{password} (\emph{String}, required)]  
+    Hashed credential; excluded from default query results for security.
+  \item[\texttt{role} (\emph{String}, enum \{USER, ADMIN\})]  
+    Access level determining permissions within the application.
+  \item[\texttt{isVerified} (\emph{Boolean}, default: \texttt{false})]  
+    Indicates whether the user`s email has been confirmed.
+  \item[\texttt{accountVerificationToken}, \texttt{verificationTokenExpiration}]  
+    Token and expiry timestamp for email verification workflows.
+  \item[\texttt{passwordResetToken}, \texttt{resetTokenExpiration}]  
+    Token and expiry timestamp for password recovery processes.
+  \item[\texttt{profileId} (\emph{ObjectId})]  
+    Reference linking account credentials to the corresponding user profile.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{account-schema.png}
+  \caption{Account Schema}
+  \label{fig:acc-schema}
+\end{figure}
+
+\subsubsection{User Schema (\texttt{users})}
+Represents user profiles. (Figure \ref{fig:profile-schema})
+\begin{description}
+  \item[\texttt{email}, \texttt{fullName} (\emph{String}, required, unique\textsuperscript{*})]  
+    Basic identity fields; email is unique to enforce one profile per account.
+  \item[\texttt{description} (\emph{String})]  
+    Optional biography or profile summary.
+\end{description}
+\textsuperscript{*}An index enforces email uniqueness at the database level.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{profile-schema.png}
+  \caption{User Schema}
+  \label{fig:profile-schema}
+\end{figure}
+
+\subsubsection{Conversation Schema (\texttt{conversations})}
+Defines chat groups and direct-message threads. (Figure \ref{fig:conversation-schema})
+\begin{description}
+  \item[\texttt{participants} (\emph{[ObjectId]}, required)]  
+    List of user IDs involved in the conversation.
+  \item[\texttt{title}, \texttt{description} (\emph{String})]  
+    Optional metadata for group chats or topic summaries.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{conversation-schema.png}
+  \caption{Conversation Schema}
+  \label{fig:conversation-schema}
+\end{figure}
+
+\subsubsection{Message Schema (\texttt{messages})}
+Stores individual chat messages within conversations. (Figure \ref{fig:message-schema})
+\begin{description}
+  \item[\texttt{createdBy} (\emph{ObjectId}, required)]  
+    Authoring user`s ID.
+  \item[\texttt{conversationId} (\emph{ObjectId}, required)]  
+    Parent conversation reference.
+  \item[\texttt{text} (\emph{String}, required)]  
+    Message content.
+  \item[\texttt{seenBy} (\emph{[ObjectId]}, default: \texttt{[]})]  
+    IDs of users who have read the message.
+  \item[\texttt{reactions} (\emph{[String]}, default: \texttt{[]})]  
+    Emoji or reaction identifiers attached by users.
+  \item[\texttt{isDeleted}, \texttt{isEdited} (\emph{Boolean}, default: \texttt{false})]  
+    Flags for deletion and edit status.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{message-schema.png}
+  \caption{Message Schema}
+  \label{fig:message-schema}
+\end{figure}
+
+\subsubsection{Notification Schema (\texttt{notifications})}
+Captures system alerts and user-to-user notifications. (Figure \ref{fig:notification-schema})
+\begin{description}
+  \item[\texttt{sendTo} (\emph{[ObjectId]}, required)]  
+    Recipients of the notification.
+  \item[\texttt{topic} (\emph{String}, enum)]  
+    Notification category (e.g.\ new message, new reaction to message).
+  \item[\texttt{data} (\emph{Object})]  
+    Payload containing contextual information (e.g.\ IDs, message previews).
+  \item[\texttt{isSeen} (\emph{Boolean}, default: \texttt{false})]  
+    Read/unread flag.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{notification-schema.png}
+  \caption{Notification Schema}
+  \label{fig:notification-schema}
+\end{figure}
+
+\subsubsection{File Metadata Schema (\texttt{files})}
+Models additional data for uploaded files. (Figure \ref{fig:file-schema})
+\begin{description}
+  \item [\texttt{name} (\emph{String}, required)]  
+    Original file name as provided by the user. 
+  \item [\texttt{description} (\emph{String})]  
+    Optional description or caption for the file.
+  \item [\texttt{size} (\emph{Number}, required)]  
+    Size of the file in bytes.
+  \item [\texttt{mimeType} (\emph{String}, required)]  
+    MIME type of the file (e.g., image/jpeg, application/pdf).
+  \item [\texttt{fileURL} (\emph{String}, required)]  
+    URL pointing to the file in the S3-compatible object storage.
+  \item [\texttt{uploadedBy} (\emph{ObjectId}, required)]
+    Reference to the user who uploaded the file.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{file-schema.png}
+  \caption{File Metadata Schema}
+  \label{fig:file-schema}
+\end{figure}
+
+\subsection{Indexes and Performance}
+
+In order to ensure low-latency queries, I carefully defined several indexes across these different collections.
+
+\paragraph{Indexes}
+\begin{itemize}
+  \item \textbf{Unique Indexes}
+    \begin{itemize}
+      \item \texttt{accounts.email}: enforces one account per email address.
+      \item \texttt{users.email}: guarantees unique user profiles.
+    \end{itemize}
+
+  \item \textbf{Single-Field Indexes}
+    \begin{itemize}
+      \item \texttt{messages.conversationId}: accelerates retrieval of all messages in a conversation.
+      \item \texttt{notifications.sendTo}: speeds up lookup of unread notifications for a given user.
+    \end{itemize}
+
+  \item \textbf{Compound Indexes}
+    \begin{itemize}
+      \item \texttt{messages.{conversationId, createdAt}}: supports paginated fetches of recent messages by conversation.
+      \item \texttt{conversations.participants}: optimizes queries for all conversations a user participates in.
+    \end{itemize}
+
+  \item \textbf{TTL Indexes}
+    \begin{itemize}
+      \item \texttt{accounts.verificationTokenExpiration}: automatically removes stale verification tokens.
+      \item \texttt{accounts.resetTokenExpiration}: expires old password-reset tokens without manual cleanup.
+    \end{itemize}
+\end{itemize}
+
+\section{Testing strategies}
+
+For validating the correct behaviour of my functionalities, I used Jest along with NestJS’s built-in testing tools to write a solid set of unit tests. I focused mainly on the core business logic—things like authentication, file uploads, and message handling. Having these tests in place helps catch bugs early and keeps the codebase stable as new features are added.
+
+\subsection{Framework and Configuration}
+
+\begin{itemize}
+  \item \textbf{Jest}  
+    \begin{itemize}
+      \item Default test runner for NestJS projects; supports mocks, spies, snapshot testing, and coverage reporting out of the box.
+      \item Configured via \texttt{jest.config.ts} to transform TypeScript, collect coverage, and ignore compiled output directories.
+    \end{itemize}
+
+  \item \textbf{NestJS Testing Module}  
+    \begin{itemize}
+      \item Uses \texttt{Test.createTestingModule()} to instantiate a lightweight application context.
+      \item Allows overriding providers with mocked implementations or in-memory substitutes (e.g.\ in-memory MongoDB) for isolation.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Unit Tests}
+
+I prioritized unit tests for core functionalities, ensuring that key features behave correctly under both normal and error conditions.
+
+\begin{itemize}
+  \item \textbf{Authentication}
+    \begin{itemize}
+      \item \texttt{signing up}: verifies password hashing, user creation, and error on duplicate email.
+      \item \texttt{validating users}: checks credential validation logic.
+      \item Edge cases: invalid credentials, expired tokens, and role-based access assertions.
+    \end{itemize}
+
+  \item \textbf{File Uploads}
+    \begin{itemize}
+      \item \texttt{upload file}: tests file-type validation, size limits, and interaction with MinIO/S3 API (mocked).
+      \item Error scenarios: unsupported formats, storage failures, and retry logic.
+    \end{itemize}
+
+  \item \textbf{Messages}
+    \begin{itemize}
+      \item \texttt{create message}: validates conversation existence and correct document shape.
+      \item \texttt{find by conversations}: tests pagination, sorting by timestamp, and filtering out deleted messages.
+      \item Mocking of Mongoose Model methods (\texttt{save()}, \texttt{find()}, \texttt{lean()}).
+    \end{itemize}
+\end{itemize}
+
+\section{Scalability and Performance Considerations}
+
+One thing I really like about using a microservice architecture is that it makes it easy to manage and scale parts of the app separately. For this project, I broke things down into eight Dockerized services---including \emph{Authentication}, \emph{WebSocket Server}, \emph{Uploader}, and \emph{Notification}. Each one runs in its own container, so I can tweak resources like CPU and memory depending on what that service needs.
+
+For example, if messaging traffic spikes, I can spin up more WebSocket containers without touching services like the Uploader or Mailer. And when file uploads slow down, I just scale down the Upload Server to save resources.
+
+Even though I'm not using Kubernetes or autoscaling yet, having everything containerized gives me a lot of flexibility. It also helps with fault isolation and makes deploying updates a lot simpler, since I can restart or rebuild just one service without affecting the rest of the system.
+
+\begin{itemize}
+  \item \textbf{Fault Isolation:}  A failure or performance degradation in one service (e.g.\ a heavy file upload in the Uploader Server) does not directly impact the availability or responsiveness of other services.
+  \item \textbf{Independent Deployment:}  Each service can be updated, rolled back, or redeployed without requiring a full system outage.  This reduces planned downtime and allows performance optimizations to be rolled out rapidly.
+  \item \textbf{Resource Specialization:}  Services with very different I/O patterns—such as compute-heavy data aggregation versus I/O-bound file transfers—can be placed on node pools with hardware tailored to their needs (e.g.\ SSD-backed nodes for storage services, high-CPU nodes for processing).
+\end{itemize}
+
+Finally, horizontal scaling and service isolation simplify capacity planning and permit near-linear performance gains: doubling the number of replicas for a stateless service generally doubles its throughput, up to the limits of downstream dependencies (such as the database).  To maximize this benefit, this application also employs deployment best practices such as:
+
+\begin{itemize}
+  \item \textbf{Caching Layers:} Introducing in-memory caches (e.g.\ Redis) at strategic service boundaries to offload read-heavy operations and reduce latency.
+  \item \textbf{Asynchronous Processing:} Offloading non-critical tasks (notifications) or resource intensive tasks (sending emails, file uploads) to message queues and background workers, smoothing out traffic spikes and decoupling end-user interactions from longer-running processes.
+\end{itemize}
+
+Together, these architectural patterns ensure that \emph{Cloud Class} can meet demanding performance requirements today while remaining flexible enough to grow with future user populations and feature sets.
+
