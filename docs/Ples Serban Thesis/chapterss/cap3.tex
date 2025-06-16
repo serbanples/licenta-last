@@ -127,8 +127,37 @@ In my implementation, I started by thinking about all of the messages that would
 \end{itemize}
 
 \subsection{File Uploader}
+In the early days of file exchange, teams set up FTP servers on static IPs, juggling usernames, anonymous logins, and fragile directory hierarchies. Uploads would time out, backups were manual, and there was no easy way to integrate with modern web apps. As requirements grew—from embedding user-generated images in chat apps to serving large datasets via HTTP—FTP simply couldn’t keep up. Object storage emerged as the successor: a RESTful, scalable, self-healing store where applications can generate time-limited download links, automatically version files, and offload the burden of replication and durability. Today, replacing FTP with an S3-compatible store streamlines both developer workflows and end-user experience, turning clunky file drops into seamless, secure uploads and downloads.
 
+S3-compatible object storage treats each file as an immutable “object” stored in a flat namespace of buckets. It exposes a simple HTTP API—PUT to upload, GET to download, DELETE to remove—so developers don’t wrestle with filesystem mounts or NFS quirks. Objects can carry arbitrary metadata (key/value tags or headers), and platforms often offer built-in features like automatic replication across nodes, lifecycle policies (e.g. archive or delete old versions), and fine-grained access controls. Because it’s designed for petabyte-scale data, S3-style stores provide high throughput for large payloads, seamless horizontal scaling, and durability guarantees that make them a natural fit for user uploads, backups, and any scenario where large binary blobs need reliable, cost-effective storage.
 
+Traditional databases shine at structured records: rich querying, ACID transactions, indexing, and relationships across tables. However, stuffing multi-megabyte or multi-gigabyte files into a database can bloat its storage engine, slow down queries and backups, and drive up resource costs. In contrast, an S3-style object store offloads blob storage entirely, keeping the database lean for metadata lookups and relational joins. Object stores scale throughput linearly with added nodes, use pay-as-you-store pricing models, and excel at serving large downloads with built-in HTTP caching semantics. While a database might store a file’s URL and metadata, the object store holds the bytes—each in its own durable, self-healing container.
+
+In \emph{Cloud Class}, the file uploader is a key component that allows users to share study materials, lecture notes, and other resources. It is designed to handle large files efficiently while ensuring reliability and scalability. The uploader integrates with an S3-compatible object storage service (MinIO) for storing files, and uses a message queue (BullMQ) to manage upload jobs asynchronously.
+
+The file uploader is implemented as an asynchronous pipeline that delegates heavy I/O work to background workers. When a user submits a file, the client issues an HTTP POST to the webserver, which immediately enqueues a processing job and returns a 202 Accepted. A dedicated worker then uploads the file to object storage and notifies the persistence service to save metadata in the database, linking the file to the user’s record.
+
+\begin{itemize}
+\item \textbf{Client HTTP Request}
+The frontend sends the file as \texttt{multipart/form-data} to \texttt{/files/upload} and receives back a job identifier.
+\item \textbf{Webserver Endpoint}
+The HTTP handler enqueues a “process-file” job on the queue, packaging the raw file bytes along with user context.
+\item \textbf{Job Queue}
+Redis + BullMQ persist and manage jobs with retry policies, ensuring uploads survive transient failures.
+\item \textbf{Worker Process}
+A background worker consumes each job, reconstructs the file buffer, generates a unique storage key, and uploads the file to the S3-compatible store.
+\item \textbf{Object Storage}
+Minio stores the binary in a bucket and returns a URL or object key.
+\item \textbf{Persistence Service}
+Upon successful storage, an event is sent to the core service, which creates a MongoDB document for the file (URL, key, MIME type, size, uploader ID, timestamps) and adds a reference to the user’s files array.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{licenta-uploader.drawio.png}
+\caption*{File Upload Flow}
+\label{fig:file-upload-flow}
+\end{figure}
 
 \section{Technology Stack}
 
@@ -383,6 +412,29 @@ Captures system alerts and user-to-user notifications.
   \label{fig:notification-schema}
 \end{figure}
 
+\subsubsection{File Metadata Schema (\texttt{files})}
+Models additional data for uploaded files.
+\begin{description}
+  \item [\texttt{name} (\emph{String}, required)]  
+    Original file name as provided by the user. 
+  \item [\texttt{description} (\emph{String})]  
+    Optional description or caption for the file.
+  \item [\texttt{size} (\emph{Number}, required)]  
+    Size of the file in bytes.
+  \item [\texttt{mimeType} (\emph{String}, required)]  
+    MIME type of the file (e.g., image/jpeg, application/pdf).
+  \item [\texttt{fileURL} (\emph{String}, required)]  
+    URL pointing to the file in the S3-compatible object storage.
+  \item [\texttt{uploadedBy} (\emph{ObjectId}, required)]
+    Reference to the user who uploaded the file.
+\end{description}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{file-schema.png}
+  \caption*{File Metadata Schema}
+  \label{fig:file-schema}
+\end{figure}
 
 \subsection{Indexes and Performance}
 

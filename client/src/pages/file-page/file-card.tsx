@@ -89,20 +89,21 @@ export const FileCard: React.FC<FileCardProps> = ({ file, actions, actionHandler
         {renderPreview()}
 
         <h3
-          className="text-lg font-semibold mb-1"
+          className="text-lg font-semibold mb-1 truncate" 
           onClick={e => e.stopPropagation()}
         >
           {name}
         </h3>
         {description && (
           <p
-            className="text-gray-600 mb-1 text-sm"
+            className="text-gray-600 mb-1 text-sm truncate"
             onClick={e => e.stopPropagation()}
           >
             {description}
           </p>
         )}
       </div>
+
     </div>
   );
 };

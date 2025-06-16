@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { InfiniteCarousel } from './carousel';
 import { FileType, User } from '@/services/types';
-import { Eye, Download, Trash2 } from 'lucide-react';
+import { Download, Trash2 } from 'lucide-react';
 import { FileCard } from '@/pages/file-page/file-card';
 import { AvatarUploadDialog } from './avatar-upload-dialog';
 
@@ -139,7 +139,6 @@ export const UserViewEdit: React.FC<UserViewEditProps> = ({
                   key={file.id}
                   file={file}
                   actions={[
-                    { id: 'view', label: 'View', icon: Eye },
                     { id: 'download', label: 'Download', icon: Download },
                     { id: 'delete', label: 'Delete', icon: Trash2, disabled: () => !isEditable },
                   ]}

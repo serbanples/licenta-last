@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  15 JUN 2025 03:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2025.3.15)  16 JUN 2025 03:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -580,98 +580,124 @@ Underfull \vbox (badness 1320) has occurred while \output is active []
 [17 <./licenta-join-conversation.drawio.png>]
 
 [18 <./licenta-ws.drawio.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 141--143
+[]\OT1/cmr/bx/n/12 Client HTTP Re-quest \OT1/cmr/m/n/12 The fron-tend sends the file as
+ []
+
+<licenta-uploader.drawio.png, id=336, 743.77875pt x 783.92876pt>
+File: licenta-uploader.drawio.png Graphic file (type png)
+<use licenta-uploader.drawio.png>
+Package pdftex.def Info: licenta-uploader.drawio.png  used on input line 157.
+(pdftex.def)             Requested size: 424.06033pt x 446.96365pt.
+
+Underfull \vbox (badness 4168) has occurred while \output is active []
+
+
 
 [19]
+
+[20 <./licenta-uploader.drawio.png>]
+
+[21]
+
+[22]
 File: FMI-03.png Graphic file (type png)
 <use FMI-03.png>
-Package pdftex.def Info: FMI-03.png  used on input line 237.
+Package pdftex.def Info: FMI-03.png  used on input line 266.
 (pdftex.def)             Requested size: 106.01508pt x 106.01073pt.
 
 
-[20]
-
-[21]
+[23]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 283.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 312.
 
 
-[22]
-LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 290.
+[24]
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 319.
  (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 290.
-<account-schema.png, id=356, 263.48438pt x 314.17375pt>
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 319.
+<account-schema.png, id=367, 263.48438pt x 314.17375pt>
 File: account-schema.png Graphic file (type png)
 <use account-schema.png>
-Package pdftex.def Info: account-schema.png  used on input line 304.
+Package pdftex.def Info: account-schema.png  used on input line 333.
 (pdftex.def)             Requested size: 263.48372pt x 314.17297pt.
 
-Underfull \hbox (badness 1147) in paragraph at lines 313--314
+Underfull \hbox (badness 1147) in paragraph at lines 342--343
 []\OT1/cmr/m/n/12 Basic iden-tity fields; email is
  []
 
 
 
-[23 <./account-schema.png>]
-<profile-schema.png, id=366, 163.61125pt x 188.20313pt>
+[25 <./account-schema.png>]
+<profile-schema.png, id=378, 163.61125pt x 188.20313pt>
 File: profile-schema.png Graphic file (type png)
 <use profile-schema.png>
-Package pdftex.def Info: profile-schema.png  used on input line 321.
+Package pdftex.def Info: profile-schema.png  used on input line 350.
 (pdftex.def)             Requested size: 163.61084pt x 188.20265pt.
-<conversation-schema.png, id=367, 176.15813pt x 198.7425pt>
+<conversation-schema.png, id=379, 176.15813pt x 198.7425pt>
 File: conversation-schema.png Graphic file (type png)
 <use conversation-schema.png>
-Package pdftex.def Info: conversation-schema.png  used on input line 337.
+Package pdftex.def Info: conversation-schema.png  used on input line 366.
 (pdftex.def)             Requested size: 176.15768pt x 198.742pt.
 
 
-[24 <./profile-schema.png> <./conversation-schema.png>]
-Underfull \hbox (badness 1158) in paragraph at lines 354--355
+[26 <./profile-schema.png> <./conversation-schema.png>]
+Underfull \hbox (badness 1158) in paragraph at lines 383--384
 []\OT1/cmr/m/n/12 Emoji or re-ac-tion iden-ti-fiers at-tached by
  []
 
-<message-schema.png, id=380, 191.71625pt x 289.58188pt>
+<message-schema.png, id=392, 191.71625pt x 289.58188pt>
 File: message-schema.png Graphic file (type png)
 <use message-schema.png>
-Package pdftex.def Info: message-schema.png  used on input line 361.
+Package pdftex.def Info: message-schema.png  used on input line 390.
 (pdftex.def)             Requested size: 191.71577pt x 289.58116pt.
-<notification-schema.png, id=381, 156.08313pt x 190.7125pt>
+<notification-schema.png, id=393, 156.08313pt x 190.7125pt>
 File: notification-schema.png Graphic file (type png)
 <use notification-schema.png>
-Package pdftex.def Info: notification-schema.png  used on input line 381.
+Package pdftex.def Info: notification-schema.png  used on input line 410.
 (pdftex.def)             Requested size: 156.08273pt x 190.71202pt.
 
 
-[25 <./message-schema.png>]
-Underfull \hbox (badness 6063) in paragraph at lines 413--414
+[27 <./message-schema.png>]
+<file-schema.png, id=402, 173.14688pt x 271.51437pt>
+File: file-schema.png Graphic file (type png)
+<use file-schema.png>
+Package pdftex.def Info: file-schema.png  used on input line 434.
+(pdftex.def)             Requested size: 173.14645pt x 271.51369pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[28 <./notification-schema.png>]
+Underfull \hbox (badness 6063) in paragraph at lines 465--466
 []\OT1/cmtt/m/n/12 accounts.verificationTokenExpiration\OT1/cmr/m/n/12 : au-to-mat-i-cally re-moves
  []
 
 
 
-[26 <./notification-schema.png>]
+[29 <./file-schema.png>]
 
-[27]
+[30]
 
-[28]) (./chapterss/cap4.tex
+[31]) (./chapterss/cap4.tex
 
-[29]
-
-[30
-
-]
+[32]
 Chapter 4.
 
 
-[31]
+[33
 
-[32]) (./main_file_template_bachelor_masters_english.bbl
+]
 
-[33]
+[34]) (./main_file_template_bachelor_masters_english.bbl
 
-[34
+[35]
+
+[36
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 40--42
@@ -685,27 +711,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 40--42
 
 )
 
-[35] (./main_file_template_bachelor_masters_english.aux)
+[37] (./main_file_template_bachelor_masters_english.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main_file_template_bachelor_masters_english.out' has not changed.
-(rerunfilecheck)             Checksum: 91A42E04AA6F8631843569BBA5B667C3;5780.
+(rerunfilecheck)             Checksum: D8A13994CBC324D284413B316A7D7D6E;5780.
  ) 
 Here is how much of TeX's memory you used:
- 16014 strings out of 473190
- 258139 string characters out of 5704335
- 675145 words of memory out of 5000000
- 38929 multiletter control sequences out of 15000+600000
+ 16035 strings out of 473190
+ 258627 string characters out of 5704335
+ 675332 words of memory out of 5000000
+ 38945 multiletter control sequences out of 15000+600000
  567734 words of font info for 68 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,7n,79p,969b,653s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,969b,664s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on main_file_template_bachelor_masters_english.pdf (35 pages, 492196 bytes).
+Output written on main_file_template_bachelor_masters_english.pdf (37 pages, 556598 bytes).
 PDF statistics:
- 541 PDF objects out of 1000 (max. 8388607)
- 459 compressed objects within 5 object streams
- 120 named destinations out of 1000 (max. 500000)
- 363 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 560 PDF objects out of 1000 (max. 8388607)
+ 472 compressed objects within 5 object streams
+ 125 named destinations out of 1000 (max. 500000)
+ 373 words of extra memory for PDF output out of 10000 (max. 10000000)
 
