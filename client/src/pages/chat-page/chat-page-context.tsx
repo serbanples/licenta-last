@@ -15,6 +15,7 @@ type ChatContextType = {
         onConversationSelect: (id: string) => void;
         reload: () => void,
         updateUnread: (conversationId: string) => void;
+        refresh : () => void
     },
     newConvDialogContext: {
         onCreate: (users: User[], name?: string, description?: string) => void;

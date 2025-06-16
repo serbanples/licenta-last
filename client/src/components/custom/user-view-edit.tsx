@@ -138,10 +138,10 @@ export const UserViewEdit: React.FC<UserViewEditProps> = ({
                 <FileCard
                   key={file.id}
                   file={file}
-                  actions={[
+                  actions={ isEditable ? [
                     { id: 'download', label: 'Download', icon: Download },
-                    { id: 'delete', label: 'Delete', icon: Trash2, disabled: () => !isEditable },
-                  ]}
+                    { id: 'delete', label: 'Delete', icon: Trash2 },
+                  ] : [{ id: 'download', label: 'Download', icon: Download }]}
                   actionHandler={(actionId: string) => onFileAction(actionId, file)}
                 />
               )}

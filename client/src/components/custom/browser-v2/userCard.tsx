@@ -21,13 +21,11 @@ interface UserCardProps {
    */
   actionHandler: (actionId: string, userId: string) => void;
 }
-
 export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler }) => {
   const { id, fullName, email, description, profilePictureUrl } = user;
   const { getUser } = useAuth();
   const loggedInUserId = getUser()?.user?.id;
 
-  // Trigger an "item-view" action on card click
   const handleCardClick = () => {
     actionHandler('item-view', id);
   };
@@ -37,19 +35,17 @@ export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler
       return action.disabled(loggedInUserId!, user);
     }
     return false;
-  }
+  };
 
   const isActionDisplayed = (action: Action) => {
     if (action.displayRule) {
       return action.displayRule(loggedInUserId!, user);
     }
     return true;
-  }
+  };
 
   return (
-    <div
-      className="relative border rounded-lg shadow flex flex-col bg-white"
-    >
+    <div className="relative border rounded-lg shadow bg-white cursor-pointer hover:shadow-md h-40" onClick={handleCardClick}>
       {/* Overflow menu */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -62,9 +58,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end" className="w-40">
           {actions.map(action => {
-            if (!isActionDisplayed(action)) {
-              return null;
-            }
+            if (!isActionDisplayed(action)) return null;
             const Icon = action.icon;
             return (
               <DropdownMenuItem
@@ -83,36 +77,20 @@ export const UserCard: React.FC<UserCardProps> = ({ user, actions, actionHandler
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Profile photo */}
-      <div className='cursor-pointer hover:shadow-md rounded-lg p-6 flex flex-col h-full w-full' onClick={handleCardClick}>
+      {/* Avatar and info row */}
+      <div className="p-6 flex items-center gap-4">
         {profilePictureUrl && (
           <img
             src={profilePictureUrl}
             alt={fullName}
-            className="w-full h-32 object-cover rounded-md mb-4"
+            className="w-20 h-20 rounded-full object-cover"
             onClick={e => e.stopPropagation()}
           />
         )}
-
-        <h3
-          className="text-xl font-semibold mb-1"
-          onClick={e => e.stopPropagation()}
-        >
-          {fullName}
-        </h3>
-        {description && (
-          <p
-            className="text-gray-600 mb-1"
-            onClick={e => e.stopPropagation()}
-          >
-            {description}
-          </p>
-        )}
-        <div
-          className="text-gray-500"
-          onClick={e => e.stopPropagation()}
-        >
-          {email}
+        <div className="flex flex-col" onClick={e => e.stopPropagation()}>
+          <h3 className="text-xl font-semibold mb-1">{fullName}</h3>
+          {description && <p className="text-gray-600 mb-1">{description}</p>}
+          <div className="text-gray-500">{email}</div>
         </div>
       </div>
     </div>

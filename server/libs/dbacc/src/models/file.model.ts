@@ -11,7 +11,7 @@ import { LoggerService } from "@app/logger";
  */
 @Injectable()
 export class FileModel extends AbstractModel<FileType> {
-  protected override textSearchFields: string[] = ['title', 'description'];
+  protected override textSearchFields: string[] = ['name', 'description'];
   protected override populateOptions: PopulateOpts = [{
     path: 'uploadedBy', model: ModelNameEnum.USER, select: 'email fullName'
   }];

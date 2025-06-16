@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { User } from "@/services/types";
 import { Plus } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useChatContext } from "../chat-page-context";
 
 export const NewConversationDialog = () => {
@@ -19,6 +19,10 @@ export const NewConversationDialog = () => {
     const [description, setDescription] = React.useState('');
     const [open, setOpen] = React.useState(false);
     const [searchValue, setSearchValue] = React.useState<string>();
+
+    useEffect(() => {
+        onSearchUsers('');
+      }, [])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

@@ -91,14 +91,16 @@ export const FileViewEdit: React.FC<FileViewEditProps> = ({
         </div>
 
         <div className="flex gap-2">
-          <a
+          {/* <a
             href={formState.fileURL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-blue-600 hover:underline"
-          >
+          > */}
+          <div className="inline-flex items-center gap-1 text-blue-600 hover:underline" onClick={() => window.location.href = formState.fileURL}>
             <Download className="w-5 h-5" /> Download
-          </a>
+          </div>
+          {/* </a> */}
           {isEditable && (
             <Button
               variant="destructive"

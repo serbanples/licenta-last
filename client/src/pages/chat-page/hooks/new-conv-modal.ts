@@ -9,17 +9,17 @@ export const useNewConvModal = () => {
     const [users, setUsers] = useState<User[]>([]);
     const userId = useAuth().getUser()?.user?.id;
 
-    const { reload } = useConversationScroller();
+    const { refresh } = useConversationScroller();
 
     const onCreate = async (users: User[], name?: string, description?: string) => {
         const userIds = users.map((user) => user.id);
         await createConversation(userIds, name, description);
-        reload();
+        refresh();
     }
 
     const onSearchUsers = (text: string) => {
         browse({ pagination: { fromItem: 0, pageSize: 5 }, text }).then((users) => {
-            setUsers(users.result.filter(user => user.id !== userId));
+            setUsers([...users.result.filter(user => user.id !== userId)]);
         })
     }
 

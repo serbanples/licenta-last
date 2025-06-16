@@ -29,6 +29,7 @@ export const useConversationScroller = () => {
                 if (result.pagination.count < result.pagination.totalCount) setHasMore(true);
                 else setHasMore(false);
                 setNextFrom(result.pagination.perPage);
+                console.log(result.result)
                 setConversations(result.result);
                 setLoading(false);
             })
@@ -74,5 +75,9 @@ export const useConversationScroller = () => {
         });
     };
 
-    return { conversations, fetchNext, fetchById, clear, hasMore, onConversationSelect, reload, updateUnread };
+    const refresh = () => {
+        fetchConversations(defaultPagination);
+    }
+
+    return { conversations, fetchNext, fetchById, clear, hasMore, onConversationSelect, reload, updateUnread, refresh };
 }

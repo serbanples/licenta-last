@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useChatContext } from "../chat-page-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -6,11 +6,18 @@ import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, Command
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { MessageSquare } from "lucide-react";
 import { User } from "@/services/types";
+import { useDebounce } from '@/hooks';
 
 export const NewDirectConversationDialog: React.FC = () => {
   const { onCreate, onSearchUsers, users } = useChatContext().newConvDialogContext;
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState<string>("");
+
+  useEffect(() => {
+    onSearchUsers('');
+  }, [])
+
+  const {debouncedCallback} = useDebounce(onSearchUsers, 500);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -26,7 +33,7 @@ export const NewDirectConversationDialog: React.FC = () => {
             value={searchValue}
             onValueChange={(value) => {
               setSearchValue(value);
-              onSearchUsers(value);
+              debouncedCallback(value);
             }}
           />
           <CommandList>
